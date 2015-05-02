@@ -1,0 +1,23 @@
+
+<div data-ng-controller="loginCtrl" >
+    <div class="row">
+        <div class="col-sm-6 col-md-8 "  style="margin-left: 50px;">
+            <h1 class="text-center login-title">Login</h1>
+            <div class="account-wall">
+                <div data-ng-show="error" class="alert alert-danger">{{ error }}</div>
+                <div data-ng-show="success" class="alert alert-danger">{{ success | json }}</div>
+                <form name="form" class="form-login" data-ng-submit="login(UserModel)" role="form">
+                    <input type="text"   name="username" class="form-control" data-ng-model="UserModel.username" placeholder="Username" required autofocus />
+                    <span data-ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
+                    <input type="password" data-ng-model="UserModel.password"  name="pwd" class="form-control" placeholder="Password" required />
+                    <span data-ng-show="form.pwd.$dirty && form.pwd.$error.required" class="help-block">Password is required</span>
+                    <!--  <input type="submit" value="{{ 'LOGIN_LOG_IN_ACTION' | translate }}" class="btn btn-lg btn-primary btn-block"/>-->
+
+                    <button type="submit" data-ng-disabled="form.$invalid || dataLoading" class="btn btn-lg btn-primary btn-block">Login</button>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

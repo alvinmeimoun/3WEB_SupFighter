@@ -1,0 +1,27 @@
+
+<div data-ng-controller="registerCtrl">
+    <div class="row">
+        <div class="col-sm-6 col-md-8 " style="margin-left: 50px;">
+            <h1 class="text-center login-title">Register</h1>
+
+            <div class="account-wall">
+                <div data-ng-show="success"  class="alert alert-success">{{ success }}</div>
+
+                <div data-ng-show="error" class="alert alert-danger">{{ error }}</div>
+                <form name="form" class="form-login" data-ng-submit="register(UserModel)" role="form">
+                    <input type="text"   name="username" class="form-control" data-ng-model="UserModel.username" placeholder="Username" required autofocus />
+                    <span data-ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
+                    <input type="password" data-ng-model="UserModel.password"  name="pwd" class="form-control" placeholder="Password" required />
+                    <span data-ng-show="form.pwd.$dirty && form.pwd.$error.required" class="help-block">Password is required</span>
+                    <!--  <input type="submit" value="{{ 'LOGIN_LOG_IN_ACTION' | translate }}" class="btn btn-lg btn-primary btn-block"/>-->
+                    <input type="password" data-ng-model="pwd_confirm"  name="pwd_confirm" class="form-control" placeholder="Password confirmation" required />
+                    <span data-ng-show="form.pwd_confirm.$dirty && form.pwd_confirm.$error.required" class="help-block">Password confirmation is required</span>
+
+                    <div   data-ng-show="UserModel.password != pwd_confirm" data-ng-if="UserModel.password != pwd_confirm"> Password and Password confirmation not match</div>
+                    <button type="submit" data-ng-disabled="form.$invalid || dataLoading" class="btn btn-lg btn-danger btn-block">Register</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

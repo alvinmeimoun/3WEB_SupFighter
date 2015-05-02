@@ -1,0 +1,29 @@
+input {
+    margin-bottom: 10px;
+}
+
+/*body
+{
+    background-color: aliceblue;
+}*/
+
+.container {
+
+    background-color: white;
+
+    padding-bottom: 100px;
+}
+h1
+{
+
+    padding-bottom: 10px;
+    border-bottom: solid #ebebeb 1px;
+}
+#image_stickman 
+{
+text-align: center;
+}
+#image_stickman img
+{
+    height: 300px;
+}
