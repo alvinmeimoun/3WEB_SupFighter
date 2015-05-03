@@ -1,6 +1,6 @@
 
 /**
- * Created by Antonin on 27/01/2015.
+ * Created by Antonin
  *
  * Service gérant le login utilisateur et la mise en place du cookie contenant les informations principales user
  */

@@ -6,7 +6,28 @@ input {
 {
     background-color: aliceblue;
 }*/
+#listUsersCo li {
 
+    list-style-type: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: steelblue;
+   border-bottom:  solid #dedede 1px;
+
+}
+#listUsersCo li h5 {
+
+
+    color: steelblue;
+    font-size: 18px;
+    text-transform: uppercase;
+
+}
+#listUsersCo table tr td:first-child
+{
+    width: 175px;
+    overflow: hidden;
+}
 .container {
 
     background-color: white;
@@ -27,3 +48,25 @@ text-align: center;
 {
     height: 300px;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font: 13px Helvetica, Arial; }
+#chat {
+    max-height: 500px;
+    min-height: 500px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border: solid 1px lightblue;
+}
+#chat_form { width:31.3%; padding: 3px; position: fixed; bottom: 0; background-color: lightblue;}
+#chat_form input { border: 0; padding: 10px; width:100%;  margin-right: .5%; }
+#chat_form button {
+    width: 100%;
+    background: steelblue;
+    border: none;
+    padding: 10px;
+    color: white;
+    }
+#messages { list-style-type: none; margin: 0; padding: 0; }
+#messages li { padding: 5px 10px; }
+#messages li:nth-child(odd) { background: #eee; }

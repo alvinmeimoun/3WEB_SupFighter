@@ -3,7 +3,14 @@ var fs = require('fs'),
     pwdHash = require('password-hash'),
     User = require('./schemas/User');
 
+
 var Controller = {
+
+    sendInvite: function(req, res)
+    {
+
+
+    },
 
     required: function(keys, type, req) {
         var ret = {};

@@ -9,18 +9,32 @@
 
 angular.module('menu.controller', [
         'authentication.service',
-        'toastr'
+        'toastr',
+        'socket.service'
     ])
-.directive('menu',function() {
+.directive('menu',function(AuthenticationService) {
     return {
         restrict: 'E',
         //scope: true,
         replace: true,
-        templateUrl: '/angular/views/menu.html'
+        templateUrl: '/angular/views/menu.html',
+        link: function($scope, elem, attrs  ) {
+            $('#test').click(function()
+            {
+                console.log('');
+                console.log('logout');
+                var socket = io();
+
+                socket.emit('logout', $scope.nickname);
+            })
+
+
+
+        }
     };
 })
 
-    .controller('menuCtrl', function($scope,$cookieStore, $location, AuthenticationService,toastr) {
+    .controller('menuCtrl', function($scope,$cookieStore, $location, AuthenticationService,toastr, mySocket) {
 
         /*$scope.message = "Waiting 2000ms for update";*/
 
@@ -40,7 +54,10 @@ angular.module('menu.controller', [
 
         $scope.logout = function()
         {
+
+
             AuthenticationService.ClearCredentials();
+
             $location.path('#/');
             toastr.info('Vous avez été déconnecté ! A bientôt ! ');
             setInterval(function () {

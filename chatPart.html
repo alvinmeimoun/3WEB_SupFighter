@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+
+
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        #chat_form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 30%; }
+        #chat_form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+        #chat_form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+    </style>
+</head>
+<body>
+<div id="chat">
+    <ul id="messages">
+
+
+    </ul>
+    <form id="chat_form" action="">
+        <input id="m" autocomplete="off"/> <button>SEND</button>
+    </form>
+</div>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+    /**
+     * Created with JetBrains PhpStorm.
+     * User: Antonin
+     * Date: 02/05/15
+     * Time: 14:59
+     * To change this template use File | Settings | File Templates.
+     */
+
+    var username = "";
+    var completedMessage;
+    var messages = [];
+    var socket;
+    try
+    {
+        socket = io();
+        console.log("socket is ok");
+    }
+    catch (e)
+    {
+        e.message();
+    }
+    console.log(localStorage.getItem("user"));
+    if(!localStorage.getItem("user"))
+    {
+        //$('#login_div').show();
+        $('#chat').hide();
+        /*$('#login').submit(function(e)
+         {
+         // permet eviter le rechargement de la page
+         e.preventDefault();
+         username = $('#username').val();
+         $('#login_div').hide();
+         $('#chat').show();
+         localStorage.setItem("user", username);
+         });*/
+    }
+
+    else
+    {
+        username = localStorage.getItem("user");
+        console.log("user" + localStorage.getItem("user"));
+        $('#login_div').hide();
+        $('#chat').show();
+        $('#chat_form').submit(function(e)
+        {
+            e.preventDefault();
+            completedMessage = username + ' - ' + $('#m').val();
+            messages.push(completedMessage);
+            // console.log(completedMessage);
+            if(window.localStorage)
+            {
+                if(localStorage.getItem("messages"))
+                {
+                    var temp = localStorage.getItem("messages") ;
+                   // temp.push(completedMessage);
+                    //localStorage.removeItem("messages");
+
+                    localStorage.setItem("messages", temp);
+                }
+                else
+                {
+                    localStorage.setItem("messages", messages);
+                }
+
+            }
+            console.log("local storage :" + messages);
+            socket.emit('chat message', completedMessage );
+            $('#m').val('');
+            return false;
+        });
+        if (socket)
+        {
+            if(window.localStorage)
+            {
+                if(!localStorage.getItem("messages"))
+                {
+                    console.log("local storage items : " + localStorage.getItem("messages"));
+
+                    localStorage.getItem("messages").forEach(function(item)
+                    {
+
+                        $('#messages').append($('<li>').text(item));
+                    });
+                }
+            }
+            socket.on('chat message', function(msg)
+            {
+                $('#messages').append($('<li>').text(msg));
+            });
+        }
+        else
+        {
+
+        }
+    }
+</script>
+</body>
+</html>

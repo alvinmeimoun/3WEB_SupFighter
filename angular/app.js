@@ -9,11 +9,17 @@ var myApp = angular.module("MyApp", [
     'ngRoute',
     'ngCookies',
     'toastr',
+        'btford.socket-io',
+    'authentication.service',
     'login.controller',
     'register.controller',
-    'authentication.service',
     'home.controller',
-    'menu.controller'
+    'menu.controller',
+    'socket.service',
+    'chat.controller',
+        'connectedUsers.controller',
+
+    'dashboard.controller'
 ])
 .config(['$routeProvider',
     function($routeProvider) {
@@ -25,8 +31,8 @@ var myApp = angular.module("MyApp", [
             });
         $routeProvider.
             when('/dashboard', {
-                templateUrl: '/angular/views/dashboard.html'
-                // controller: 'Ctrl'
+                templateUrl: '/angular/views/dashboard.html',
+                controller: 'dashboardCtrl'
 
             });
        //* $routeProvider.
@@ -42,4 +48,17 @@ var myApp = angular.module("MyApp", [
 
             });*/
 
-    }])
+    }]);
+/*.factory('socket', function ($rootScope) {
+    var socket = io.connect('http://localhost:8000');
+    return {
+        on: function (eventName, callback) {
+            socket.on(eventName, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        }
+    };
+    });*/
