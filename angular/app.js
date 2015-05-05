@@ -15,6 +15,8 @@ var myApp = angular.module("MyApp", [
     'register.controller',
     'home.controller',
     'menu.controller',
+    'gamezone.controller',
+    'gameboard.controller',
     'socket.service',
     'chat.controller',
         'connectedUsers.controller',
@@ -27,13 +29,16 @@ var myApp = angular.module("MyApp", [
             when('/', {
                 templateUrl: '/angular/views/home.html',
                 controller: 'homeCtrl'
-
             });
         $routeProvider.
             when('/dashboard', {
                 templateUrl: '/angular/views/dashboard.html',
                 controller: 'dashboardCtrl'
-
+            });
+        $routeProvider.
+            when('/game', {
+                templateUrl: '/angular/views/gameboard.html',
+                controller: 'gameboardCtrl'
             });
        //* $routeProvider.
           /*  when('/timeline', {
