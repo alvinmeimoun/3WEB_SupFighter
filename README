@@ -1,0 +1,20 @@
+Bienvenue sur SupFighter
+
+Pour utiliser l'application, suivre les étapes ci-dessous :
+- importer dans la base de données MongoDb le fichier supinfo_users.json
+
+- aller dans le répertoire racine du projet et ouvrir un invite de commande puis taper  :
+    - npm install ( peut prendre quelques minutes )
+
+
+- aller dans le répertoire angular du projet et ouvrir un invite de commande puis tapez :
+    - bower update
+
+Enfin pour démarrer le projet il faut ouvrir le listener mongodb dans Programmes/MongoDB/server/bin/3.0/mongod.exe
+
+Puis aller dans le répertoire racine du projet, ouvrir une console et taper :
+    - node app.js
+
+Si tout va bien le message "Server on line" devrait apparaître.
+
+Good luck

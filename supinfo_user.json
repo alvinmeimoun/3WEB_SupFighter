@@ -1,0 +1,4 @@
+{"__v":0,"_id":{"$oid":"55432d43d308772c1eb933b4"},"password":"sha1$fe3ddf72$1$2330772fee702f1761a0ac2097b43893b476c24b","username":"test6"}
+{"__v":0,"_id":{"$oid":"5543aca8517f282810088d2d"},"password":"sha1$0ef3f04d$1$6d498614dc591671b22e814929bbac1807870032","username":"test8"}
+{"__v":0,"_id":{"$oid":"5543b38d82bb14ec1123949e"},"password":"sha1$bc12be89$1$8afaa50e698766186a4dc10363d11412cd8f09da","username":"test9"}
+{"__v":0,"_id":{"$oid":"5543b39982bb14ec1123949f"},"password":"sha1$45ddf5f8$1$7f902375ba7a51db5d5a3472fdd6d9af2a7f3570","username":"test8"}
