@@ -5,6 +5,7 @@ var canvas, ctx, sprites,spritesEnnemy,
     leftKey = false,
     uppercutKey = false,
     kickRight = false,
+    jumpKey = false,
     upKey = false,
     downKey = false,
 
@@ -28,7 +29,7 @@ function drawShip() {
     }
     ctx.drawImage(sprites, srcX, srcY, ship_w, ship_h, ship_x, ship_y, ship_w, ship_h);
     ctx.drawImage(spritesEnnemy, srcEnnemyX, srcEnnemyY, shipEnnemy_w, shipEnnemy_h, ennemy_x, shipEnnemy_y, shipEnnemy_w, shipEnnemy_h);
-    if (rightKey == false || leftKey == false || uppercutKey == false|| kickRight == false) {
+    if (rightKey == false || leftKey == false || uppercutKey == false|| kickRight == false || jumpKey == false) {
         srcX = 10;
     }
 }
@@ -39,21 +40,29 @@ function loop() {
 }
 
 function keyDown(e) {
+
+    //Documentation key
+    //http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
+
+    //Fléche droite
     if (e.keyCode == 39) {
         console.log("RIGHT");
         //sprites.src = 'resources/pictures/game/stickman_sprite.png';
         rightKey = true;
     }
+    //Fléche gauche
     else if (e.keyCode == 37) {
         console.log("LEFT");
         //sprites.src = 'resources/pictures/game/stickman_sprite.png';
         leftKey = true;
     }
+    //Touche A Uppercut
     else if (e.keyCode == 65) {
         console.log("A");
         sprites.src = 'resources/pictures/game/stickman_sprite_upper.png';
         uppercutKey = true;
     }
+    //Touche Z Kick + Augmentation de la largeur pour le sprite Kick
     else if (e.keyCode == 90){
         console.log("Z");
         ship_w = 100;
@@ -61,22 +70,41 @@ function keyDown(e) {
         sprites.src = 'resources/pictures/game/stickman_sprite_kickRigt.png';
         kickRight = true;
     }
+    //Touche space == Jump + Augmentation de la valeur du saut
+    else if(e.keyCode == 32){
+        console.log("SPACE");
+        ship_y = height - 340;
+        sprites.src = 'resources/pictures/game/stickman_sprite.png';
+        jumpKey = true;
+    }
 }
 function keyUp(e) {
+
+    //Documentation key
+    //http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
+
+    //Fléche droite == touche relachée
     if (e.keyCode == 39) {
         rightKey = false;
     }
+    //Fléche gauche == touche relachée
     else if (e.keyCode == 37) {
         leftKey = false;
     }
+    //Touche uppercut == touche relachée + Affichage sprite de base
     else if (e.keyCode == 65) {
         uppercutKey = false;
         sprites.src = 'resources/pictures/game/stickman_sprite.png';
     }
+    //Touche kick == touche relachée + Affichage sprite de base + Rétablissement de la largeur de base
     else if (e.keyCode == 90) {
         kickRight = false;
         ship_w = 67;
         sprites.src = 'resources/pictures/game/stickman_sprite.png';
+    }
+    //Touche space == touche relachée + Rétablissement de la hauteur de base
+    else if (e.keyCode == 32){
+        ship_y = height - 200;
     }
 }
 
