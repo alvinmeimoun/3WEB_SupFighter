@@ -38,20 +38,20 @@ db.once('open', function() {
 
 var clients = [];
 var listOfInvitations = [];
-
+var states = ['Invite','Send'];
 io.on('connection', function(socket)
 {
-    console.log('a user connected');
-
+    console.log('Anonym connection');
 
     socket.on('login', function(client)
     {
+        console.log('a user connected');
         console.log('list of connected users event : ');
         clients.push(client);
 
        // console.log(clients);
         clients.forEach(function(entry) {
-
+            entry.state = states[0];
             console.log(entry);
         });
         io.emit('login', clients);
@@ -116,6 +116,28 @@ io.on('connection', function(socket)
         }
 
         io.emit('sendInvite', listOfInvitations);
+
+
+
+    });
+    socket.on('sendResponse', function(invite)
+    {
+        //console.log('send response ' + JSON.stringify(invite));
+        if(listOfInvitations.length != 0)
+        {
+        listOfInvitations.forEach(function(item)
+        {
+            if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
+            {
+               item.response = invite.response;
+               console.log(item.response);
+            }
+
+        });
+
+        }
+
+        io.emit('sendResponse', listOfInvitations);
 
 
 

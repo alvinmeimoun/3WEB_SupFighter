@@ -1,0 +1,16 @@
+<div ng-controller="invitationsCtrl">
+    <h2> Invitations to Game</h2>
+    <pre> {{ listOfInvitations | json }}</pre>
+    <ul id="listUsersCo" ng-repeat="item in listOfInvitations">
+        <li>
+            <table>
+                <tr>
+                    <td><h5 class="usersInvit"> {{ item.fromUser.username }}</h5> </td>
+                    <td>
+                        <button class="btn btn-success" ng-disabled="" ng-model="item" ng-click="acceptInvite($index,item)" > Accept </button> </td>
+                    <td><button class="btn btn-danger" ng-disabled="" ng-model="item" ng-click="denyInvite($index,item)" > Deny </button> </td>
+                </tr>
+            </table>
+        </li>
+    </ul>
+</div>

@@ -9,10 +9,15 @@
 
 angular.module('home.controller', [
         'login.controller',
-        'register.controller'
+        'register.controller',
+        'authentication.service'
     ])
-// Controlleur d'un formulaire de login
-    .controller("homeCtrl", function($scope, $http, $location ) {
+// Controlleur de la page home
+    .controller("homeCtrl", function($scope, $http, $location , AuthenticationService) {
 
-
+        // Si l'utilisateur est authentifié,  on le redirige vers la page dashboard
+        if(typeof(AuthenticationService.GetCredentials()) !== "undefined")
+        {
+            $location.path('/dashboard');
+        }
     });

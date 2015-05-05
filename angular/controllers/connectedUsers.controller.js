@@ -19,7 +19,8 @@ angular.module('connectedUsers.controller', [
         var socket = io();
         //console.log(socket);
         var usersList = [];
-        $scope.states = ['Invite','Send'];
+        var states = ['Invite','Send'];
+        $scope.states = states;
         var invitedUser = null;
         $scope.disable = false;
         // Nous envoyons une requête au serveur pour récupérer la liste des utilisateurs connectés
@@ -37,9 +38,9 @@ angular.module('connectedUsers.controller', [
                             else
                             {
                                 usersList[i] = users[i];
-                                usersList[i].state = $scope.states[0];
+                                //usersList[i].state = $scope.states[0];
                             }
-
+                           // usersList[i].state = $scope.states[0];
                         }
                     }
 
@@ -100,7 +101,7 @@ angular.module('connectedUsers.controller', [
         {
             invitedUser = item;
             console.log(item);
-            var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : "" };
+            var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
             socket.emit('sendInvite',invite);
             $scope.listOfUsers[index].state = $scope.states[1];
 
