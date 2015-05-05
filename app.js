@@ -130,21 +130,37 @@ io.on('connection', function(socket)
             if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
             {
                item.response = invite.response;
-               console.log(item.response);
+               //console.log(item.response);
             }
 
         });
 
         }
 
-        io.emit('sendResponse', listOfInvitations);
+        io.emit('sendResponse', invite);
+
+
 
 
 
     });
-    socket.on('listenToInvitations', function(invite)
+    socket.on('listenToResponse', function(invite)
     {
+        if(listOfInvitations.length != 0)
+        {
+            listOfInvitations.forEach(function(item)
+            {
+                if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
+                {
+                    item.response = invite.response;
+                    //console.log(item.response);
+                }
 
+            });
+
+        }
+
+        io.emit('listenToResponse', invite);
 
     });
 

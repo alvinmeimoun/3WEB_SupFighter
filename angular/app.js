@@ -10,6 +10,7 @@ var myApp = angular.module("MyApp", [
     'ngCookies',
     'toastr',
         'btford.socket-io',
+        'ui.bootstrap',
     'authentication.service',
     'login.controller',
     'register.controller',
