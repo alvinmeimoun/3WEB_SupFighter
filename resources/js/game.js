@@ -56,20 +56,20 @@ function keyDown(e) {
     }
     //Touche A Uppercut
     else if (e.keyCode == 65) {
-        player.image.src = 'resources/pictures/game/stickman_sprite_upper.png';
+        player.image.src = STICKMAN_UPPER;
         uppercutKey = true;
     }
     //Touche Z Kick + Augmentation de la largeur pour le sprite Kick
     else if (e.keyCode == 90){
         player.width = 100;
 
-        player.image.src = 'resources/pictures/game/stickman_sprite_kickRigt.png';
+        player.image.src = STICKMAN_KICKRIGHT;
         kickRight = true;
     }
     //Touche space == Jump + Augmentation de la valeur du saut
     else if(e.keyCode == 32){
         player.y = height - 340;
-        player.image.src = 'resources/pictures/game/stickman_sprite.png';
+        player.image.src = STICKMAN_NORMAL;
         jumpKey = true;
     }
 }
@@ -89,13 +89,13 @@ function keyUp(e) {
     //Touche uppercut == touche relachée + Affichage sprite de base
     else if (e.keyCode == 65) {
         uppercutKey = false;
-        player.image.src = 'resources/pictures/game/stickman_sprite.png';
+        player.image.src = STICKMAN_NORMAL;
     }
     //Touche kick == touche relachée + Affichage sprite de base + Rétablissement de la largeur de base
     else if (e.keyCode == 90) {
         kickRight = false;
         player.width = 67;
-        player.image.src = 'resources/pictures/game/stickman_sprite.png';
+        player.image.src = STICKMAN_NORMAL;
     }
     //Touche space == touche relachée + Rétablissement de la hauteur de base
     else if (e.keyCode == 32){
@@ -106,17 +106,17 @@ function keyUp(e) {
 function spriteCall() {
     if (rightKey == true) {
 
-        player.image.src = 'resources/pictures/game/stickman_sprite.png';
+        player.image.src = STICKMAN_NORMAL;
     }
     else if (leftKey == true) {
-        player.image.src = 'resources/pictures/game/stickman_sprite.png';
+        player.image.src = STICKMAN_NORMAL;
     }
     else if (uppercutKey == true) {
-        player.image.src = 'resources/pictures/game/stickman_sprite_upper.png';
+        player.image.src = STICKMAN_UPPER;
 
     }
     else if (kickRight == true) {
-        player.image.src = 'resources/pictures/game/stickman_sprite_kickRigt.png';
+        player.image.src = STICKMAN_KICKRIGHT;
 
     }
 }
@@ -124,8 +124,8 @@ function launchGame() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 10, 0, 'resources/pictures/game/stickman_sprite.png');
-    ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 10, 0, 'resources/pictures/game/stickman_sprite_ennemy.png');
+    player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 10, 0, STICKMAN_NORMAL);
+    ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 10, 0, STICKMAN_ENNEMY_NORMAL);
 
     spriteCall();
     setInterval(loop, 1000 / 30);

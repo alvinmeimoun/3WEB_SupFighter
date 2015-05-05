@@ -1,3 +1,9 @@
+var STICKMAN_NORMAL = 'resources/pictures/game/stickman_sprite.png';
+var STICKMAN_UPPER = 'resources/pictures/game/stickman_sprite_upper.png';
+var STICKMAN_KICKRIGHT = 'resources/pictures/game/stickman_sprite_kickRigt.png';
+
+var STICKMAN_ENNEMY_NORMAL = 'resources/pictures/game/stickman_sprite_ennemy.png';
+
 function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageSrc) {
     var player = {
         x: _x,
