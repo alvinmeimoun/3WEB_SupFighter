@@ -28,12 +28,7 @@ function drawShip() {
         player.srcX = 10;
     }
 
-    //TODO collision
-    //var collision = ship_x < ennemy_x + shipEnnemy_w &&
-    //    ship_x + ship_w > ennemy_x &&
-    //    ship_y < shipEnnemy_y + shipEnnemy_h &&
-    //    ship_y + ship_h > shipEnnemy_y;
-    //console.log(collision);
+    var collision = isInCollision(player, ennemy);
 }
 
 function loop() {
@@ -132,3 +127,10 @@ function launchGame() {
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
 };
+
+function isInCollision(playerA, playerB){
+    return playerA.x < playerB.x + (playerB.width/2) &&
+        playerA.x + playerA.width/2 > playerB.x &&
+        playerA.y < playerB.y + playerB.height &&
+        playerA.y + playerA.height > playerB.y  + 65;
+}
