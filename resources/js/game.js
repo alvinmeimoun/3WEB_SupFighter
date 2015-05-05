@@ -1,3 +1,7 @@
+var DAMAGE_UPPER = 10;
+var DAMAGE_KICK = 5;
+var DAMAGE_PUNCH = 5;
+
 var canvas, ctx, player, ennemy,
     width = 500,
     height = 400,
@@ -131,6 +135,6 @@ function launchGame() {
 function isInCollision(playerA, playerB){
     return playerA.x < playerB.x + (playerB.width/2) &&
         playerA.x + playerA.width/2 > playerB.x &&
-        playerA.y < playerB.y + playerB.height &&
+        playerA.y < playerB.y + playerB.height - 65 &&
         playerA.y + playerA.height > playerB.y  + 65;
 }

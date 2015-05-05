@@ -13,6 +13,8 @@ function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageSrc) {
         image: new Image(),
         srcX: _srcX,
         srcY: _srcY,
+        life: 100,
+
         draw: function(_context) {
             _context.drawImage(this.image, this.srcX, this.srcY, this.width, this.height, this.x, this.y, this.width, this.height);
         }
