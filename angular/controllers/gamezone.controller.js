@@ -20,7 +20,7 @@ angular.module('gamezone.controller', [
             replace: true,
             templateUrl: '/angular/views/gamezone.html',
             link: function(scope, elem, attrs ) {
-
+                launchGame();
             }
         };
 
