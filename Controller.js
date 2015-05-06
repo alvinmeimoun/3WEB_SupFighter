@@ -1,8 +1,8 @@
 var fs = require('fs'),
     md5 = require('MD5'),
     pwdHash = require('password-hash'),
-    User = require('./schemas/User');
-
+    User = require('./schemas/User'),
+    Ladder = require('./schemas/Ladder');
 
 var Controller = {
 
@@ -35,7 +35,30 @@ var Controller = {
             result: data
         }));
     },
+    getAllLadder: function(req, res) {
+        Ladder.find().exec(function(err, c) {
+            console.log("test");
+            if (err)
+                return Controller.send(500, err.toString(), {}, res);
+            //console.log(JSON.stringify(c));
+            if (c == null)
+                return Controller.send(404, 'Not found', {}, res);
 
+            return Controller.send(200, false, c, res);
+        });
+    },
+
+    getLadderByUsername: function(req, res) {
+        Ladder.findOne({ username: req.username }).exec(function(err, c) {
+            if (err)
+                return Controller.send(500, err.toString(), {}, res);
+
+            if (c == null)
+                return Controller.send(404, 'Not found', {}, res);
+
+            return Controller.send(200, false, c, res);
+        });
+    },
     getUserByUsername: function(req, res) {
         User.findOne({ username: req.username }).exec(function(err, c) {
             if (err)
@@ -103,11 +126,38 @@ var Controller = {
 
             return Controller.send(201, false, c, res);
         });
-    }
-   /* updateCustomer: function(req, res) {
-        var optional_params = ['FirstName', 'LastName', 'Website'];
+    },
+    addLadder: function(req, res) {
 
-        Customer.findOne({ _id : req.params.id }, function(err, c) {
+
+        var parse = Controller.required(['username', 'wins' ,'losses', 'time'], 'body', req);
+
+        if (parse.error)
+            return Controller.send(403, "Missing `" + parse.missing + "` value", {}, res);
+
+        // Conversion en hash du password
+        //var hashedPwd = pwdHash.generate(parse.params.password);
+        //console.log(hashedPwd);
+        var ladder = new Ladder({
+            username: parse.params.username,
+            wins: parse.params.wins,
+            losses: parse.params.losses,
+            time: parse.params.time
+        });
+
+
+        //console.log(user.username  + " " + user.password);
+        ladder.save(function(err, c) {
+            if (err)
+                return Controller.send(500, err.toString(), {}, res);
+
+            return Controller.send(201, false, c, res);
+        });
+    },
+    updateLadder: function(req, res) {
+        var optional_params = ['username', 'wins' ,'losses', 'time'];
+
+        Ladder.findOne({ username : req.params.username }, function(err, c) {
             if (err)
                 return Controller.send(500, err.toString(), {}, res);
             if (c == null)
@@ -124,8 +174,8 @@ var Controller = {
                 Controller.send(200, false, row, res);
             });
         });
-    },
-    deleteCustomer: function(req, res) {
+    }
+ /*    deleteCustomer: function(req, res) {
         Customer.findOne({ _id : req.params.id }, function(err, c) {
             if (err)
                 return Controller.send(500, err.toString(), {}, res);

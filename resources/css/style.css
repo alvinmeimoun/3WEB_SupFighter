@@ -70,3 +70,43 @@ body { font: 13px Helvetica, Arial; }
 #messages { list-style-type: none; margin: 0; padding: 0; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
+
+#listUsersInvit li {
+
+    list-style-type: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #ffffff;
+    border-bottom:  solid #dedede 1px;
+
+}
+#listUsersInvit li h5 {
+
+
+    color: white;
+    font-size: 18px;
+    text-transform: uppercase;
+
+}
+#listUsersInvit table tr td:first-child
+{
+    width: 175px;
+    overflow: hidden;
+}
+.col_left{
+    background-color: steelblue;
+    border-radius: 0.5em;
+    color: #ffffff;
+
+
+}
+.quickFight
+{
+    padding: 20px;
+    text-align: center;
+
+}
+.quickFight button
+{
+
+}

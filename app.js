@@ -87,7 +87,9 @@ io.on('connection', function(socket)
        // console.log(clients);
 
     });
-    });
+
+
+   // });
 
     socket.on('chat message', function(msg)
     {
@@ -130,15 +132,15 @@ io.on('connection', function(socket)
             if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
             {
                item.response = invite.response;
-               //console.log(item.response);
+               console.log(invite);
             }
 
         });
 
         }
 
-        io.emit('sendResponse', invite);
-
+        //io.emit('sendResponse', invite);
+        io.emit('listenToResponse',invite);
 
 
 
@@ -146,14 +148,17 @@ io.on('connection', function(socket)
     });
     socket.on('listenToResponse', function(invite)
     {
+        console.log("listen to response");
         if(listOfInvitations.length != 0)
         {
             listOfInvitations.forEach(function(item)
             {
+                console.log("listen to response");
                 if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
                 {
                     item.response = invite.response;
-                    //console.log(item.response);
+                    //listOfInvitations.splice(item,1);
+                   // console.log(item.response);
                 }
 
             });
@@ -163,12 +168,32 @@ io.on('connection', function(socket)
         io.emit('listenToResponse', invite);
 
     });
+    socket.on('RemoveInvitation',function(invite){
+        listOfInvitations.forEach(function(item)
+        {
+            console.log("listen to delete");
+            if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
+            {
+                //item.response = invite.response;
+                listOfInvitations.splice(item,1);
+                // console.log(item.response);
+                console.log("count remove" + listOfInvitations.length);
+            }
 
+        });
+
+
+        io.emit('RemoveInvitation');
+
+    });
+});
 });
 // Server Side
 //router.get('/server/', Controller.getUser);
+router.post('/server/getLadders', Controller.getAllLadder);
 router.post('/server/getUser', Controller.getUser);
 router.post('/server/addUser', Controller.addUser);
+
 /*router.put('/server/update/:id', Controller.updateCustomer);
 router.delete('/server/delete/:id', Controller.deleteCustomer);*/
 

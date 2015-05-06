@@ -16,20 +16,23 @@ angular.module('listOfInvitations.controller', [
         var socket = io();
         //console.log(socket);
         var invitationsList = [];
+        $scope.hadList = false;
         // Nous envoyons une requête au serveur pour récupérer la liste des invitations
         socket.emit('sendInvite');
         socket.on('sendInvite', function(invite){
+
             for (var i in invite)
             {
+                $scope.hadList = true;
                 if(invite.hasOwnProperty(i)){
-                    if(invite[i].ToUser.id === AuthenticationService.GetCredentials().currentUser.id)
+                    if(invite[i].ToUser.username === AuthenticationService.GetCredentials().currentUser.username)
                     {
                         if(invitationsList.length != 0)
                         {
                         // console.log("invitations : " + invitationsList);
                         invitationsList.forEach(function(item)
                         {
-                            if(invite[i].fromUser.id != item.fromUser.id )
+                            if(invite[i].fromUser.username != item.fromUser.username )
                               //  invite[i].invitState = states[0];
                                 invitationsList.push(invite[i]);
                         });
@@ -52,12 +55,14 @@ angular.module('listOfInvitations.controller', [
             invite.response = "accepted";
             socket.emit('sendResponse',invite);
             $scope.listOfInvitations[index].invitState = states[1];
+            $scope.listOfInvitations.splice(index,1);
         };
         // Fonction permettant de refuser un callback socket d accept d'invite
         $scope.denyInvite = function(index,invite)
         {
-            invite.response = "deny";
+            invite.response = "denied";
             socket.emit('sendResponse',invite);
+            $scope.listOfInvitations.splice(index,1);
         }
 
     })
