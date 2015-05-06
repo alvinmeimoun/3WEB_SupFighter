@@ -29,7 +29,7 @@ function drawShip() {
         player.srcX = 156;
     }
     else if (jumpKey) {
-
+        
     }
     player.draw(ctx);
     ennemy.draw(ctx);
@@ -58,8 +58,6 @@ function drawShip() {
     if(!kickKey){
         damageHandlerKick = false;
     }
-
-    console.log(player.toJson());
 }
 
 function loop() {

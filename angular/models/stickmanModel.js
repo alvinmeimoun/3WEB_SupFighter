@@ -34,6 +34,19 @@ function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageKey) {
                 ',"srcY": "'+ + this.srcY + '"' +
                 ',"life": "'+ + this.life + '"' +
                 ' }';
+        },
+
+        updateFromJson: function(jsonString){
+            var objFromJson = JSON.parse( jsonString );
+
+            this.x = objFromJson.x;
+            this.y = objFromJson.y;
+            this.width = objFromJson.width;
+            this.height = objFromJson.height;
+            this.imageKey = objFromJson.imageKey;
+            this.srcX = objFromJson.srcX;
+            this.srcY = objFromJson.srcY;
+            this.life = objFromJson.life;
         }
     };
 
