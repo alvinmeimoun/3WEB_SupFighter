@@ -6,6 +6,8 @@ Pour utiliser l'application, suivre les étapes ci-dessous :
 - aller dans le répertoire racine du projet et ouvrir un invite de commande puis taper  :
     - npm install ( peut prendre quelques minutes )
 
+- Si bower n'est pas installé dans l'environnement
+    - npm install -g bower
 
 - aller dans le répertoire angular du projet et ouvrir un invite de commande puis tapez :
     - bower update
