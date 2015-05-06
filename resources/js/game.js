@@ -59,7 +59,6 @@ function drawShip() {
         damageHandlerKick = false;
     }
 
-    console.log(player.image.src);
     console.log(player.toJson());
 }
 
@@ -119,17 +118,17 @@ function keyDown(e) {
 
         //Touche droite préssée au moment du Upper == Sprite kick Droite
         if(rightKey == true){
-            player.image.src = STICKMAN_UPPERRIGHT;
+            player.imageKey = STICKMAN_UPPERRIGHT;
         }
         //Touche gauche préssée au moment du Upper == Sprite kick Gauche
         else if(leftKey == true){
-            player.image.src = STICKMAN_UPPERLEFT;
+            player.imageKey = STICKMAN_UPPERLEFT;
         }
         //Disparaîtra avec les futur mises à jour
         //Pose probléme vu que le profil n'est pas bloquer
         //Touche rightKey && leftKey préssée == Upper de base
         else if (rightKey == false && leftKey == false){
-            //player.image.src = STICKMAN_UPPERRIGHT;
+            //player.imageKey = STICKMAN_UPPERRIGHT;
         }
 
         //Touche droite ou gauche pressée au moment de l'uppercut == le player ne bouge plus
@@ -153,17 +152,17 @@ function keyDown(e) {
 
         //Touche droite préssée au moment du Kick == Sprite kick Droite
         if(rightKey == true && leftKey == false){
-            player.image.src = STICKMAN_KICKRIGHT;
+            player.imageKey = STICKMAN_KICKRIGHT;
         }
         //Touche gauche préssée au moment du Kick == Sprite kick Gauche
         else if(leftKey == true && rightKey == false){
-            player.image.src = STICKMAN_KICKLEFT;
+            player.imageKey = STICKMAN_KICKLEFT;
         }
         //Disparaîtra avec les futur mises à jour
         //Pose probléme vu que le profil n'est pas bloquer
         //Touche rightKey && leftKey préssée == Kick de base
         else if (rightKey == false && leftKey == false){
-            //player.image.src = STICKMAN_KICKRIGHT;
+            //player.imageKey = STICKMAN_KICKRIGHT;
         }
 
         //Touche droite ou gauche pressée au moment du KickRight == le player ne bouge plus
@@ -183,13 +182,13 @@ function keyDown(e) {
     //Touche space == Jump + Augmentation de la valeur du saut
     else if (e.keyCode == 32) {
         player.y = height - 340;
-        player.image.src = STICKMAN_NORMAL;
+        player.imageKey = STICKMAN_NORMAL;
         jumpKey = true;
     }
     //Touche bas == accroupir
     else if (e.keyCode == 40) {
 
-        player.image.src = STICKMAN_KICKCROUCH;
+        player.imageKey = STICKMAN_KICKCROUCH;
 
         //Touche droite ou gauche pressée au moment de s'accroupir == le player ne bouge plus
         if (rightKey == true || leftKey == true) {
@@ -221,13 +220,13 @@ function keyUp(e) {
     //Touche uppercut == touche relachée + Affichage sprite de base
     else if (e.keyCode == 65) {
         uppercutKey = false;
-        player.image.src = STICKMAN_NORMAL;
+        player.imageKey = STICKMAN_NORMAL;
     }
     //Touche kick == touche relachée + Affichage sprite de base + Rétablissement de la largeur de base
     else if (e.keyCode == 90) {
         kickKey = false;
         player.width = 67;
-        player.image.src = STICKMAN_NORMAL;
+        player.imageKey = STICKMAN_NORMAL;
     }
     //Touche space == touche relachée + Rétablissement de la hauteur de base
     else if (e.keyCode == 32) {
@@ -238,7 +237,7 @@ function keyUp(e) {
     //Touche bas == touche relachée + Affichage sprite de base
     else if (e.keyCode == 40) {
 
-        player.image.src = STICKMAN_NORMAL;
+        player.imageKey = STICKMAN_NORMAL;
         crouchKey = false;
     }
 
