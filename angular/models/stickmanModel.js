@@ -3,6 +3,7 @@ var STICKMAN_UPPERRIGHT = 'resources/pictures/game/stickman_sprite_upperRight.pn
 var STICKMAN_UPPERLEFT = 'resources/pictures/game/stickman_sprite_upperLeft.png';
 var STICKMAN_KICKRIGHT = 'resources/pictures/game/stickman_sprite_kickRight.png';
 var STICKMAN_KICKLEFT = 'resources/pictures/game/stickman_sprite_kickLeft.png';
+var STICKMAN_KICKCROUCH = 'resources/pictures/game/stickman_sprite_crouch.png';
 var STICKMAN_ENNEMY_NORMAL = 'resources/pictures/game/stickman_sprite_ennemy.png';
 
 function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageSrc) {
