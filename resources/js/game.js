@@ -29,7 +29,7 @@ function drawShip() {
         player.srcX = 156;
     }
     else if (jumpKey) {
-        
+
     }
     player.draw(ctx);
     ennemy.draw(ctx);
@@ -247,8 +247,8 @@ function launchGame() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 10, 0, STICKMAN_NORMAL);
-    ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 10, 0, STICKMAN_ENNEMY_NORMAL);
+    player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 10, 0, STICKMAN_NORMAL, false);
+    ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 10, 0, STICKMAN_NORMAL, true);
 
     setInterval(loop, 1000 / 30);
     document.addEventListener('keydown', keyDown, false);
