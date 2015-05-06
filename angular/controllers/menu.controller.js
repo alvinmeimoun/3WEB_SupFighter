@@ -21,11 +21,7 @@ angular.module('menu.controller', [
         link: function($scope, elem, attrs  ) {
             $('#test').click(function()
             {
-                console.log('');
-                console.log('logout');
-                var socket = io();
 
-                socket.emit('logout', $scope.nickname);
             })
 
 
@@ -54,7 +50,9 @@ angular.module('menu.controller', [
 
         $scope.logout = function()
         {
+            var socket = io();
 
+            socket.emit('logout', $scope.nickname);
 
             AuthenticationService.ClearCredentials();
 

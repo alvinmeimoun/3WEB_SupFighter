@@ -1,7 +1,28 @@
 <div ng-controller="dashboardCtrl">
 
     <div id="col-log-reg"  style="background-color: steelblue" class="col-sm-6 col-md-5 col-md-offset-1" >
-      <p> test</p>
+        <invitations></invitations>
+
+        <script type="text/ng-template" id="myModalContent.html">
+            <div class="modal-header">
+                <h3 class="modal-title">I'm a modal!</h3>
+            </div>
+            <div class="modal-body">
+               <!-- <ul>
+                    <li ng-repeat="item in items">
+                        <a ng-click="selected.item = item">{{ item }}</a>
+                    </li>
+                </ul>
+                Selected: <b>{{ selected.item }}</b>-->
+                <h3>Your invitation had been accepted by {{ player }} </h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">Go To The Game !</button>
+                <!--<button class="btn btn-warning" ng-click="cancel()">Cancel</button>-->
+            </div>
+        </script>
+
+
     </div>
 
     <div id="col-log-reg2" style="background-color: white" class="col-sm-6 col-md-4 ">

@@ -14,18 +14,7 @@ angular.module('chat.controller', [
 // Controlleur du chat
     .controller("chatCtrl", function($scope, $http, $location, AuthenticationService,mySocket ) {
 
-       /* $scope.changePage = function() {
-            var iframe = document.getElementById("myiframe");  // One of the many ways to select your iframe
-            //var select = document.getElementById("pageselected");
-            var url = '/chat';
-            iframe.src = url;
-        }*/
-        console.log(mySocket);
-       /* socket.forward('someEvent', $scope);
-        $scope.$on('socket:someEvent', function (ev, data) {
-            $scope.theData = data;
-        });*/
-
+        // On set l'username dans le local storage pour son utilisation dans le chat
         localStorage.setItem("user",AuthenticationService.GetCredentials().currentUser.username);
     })
 
@@ -37,8 +26,6 @@ angular.module('chat.controller', [
         replace: true,
         templateUrl: '/angular/views/chat.html',
        link: function(scope, elem, attrs ) {
-            //console.log(socket);
-            // on set l'username de l'utilisateur pour pouvoir l'utiliser dans notre chat
 
             var username = "";
             var completedMessage;

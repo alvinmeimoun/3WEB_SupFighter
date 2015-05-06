@@ -3,3 +3,5 @@
 *.iml
 *.log
 atlassian-ide-plugin.xml
+/angular/bower_components
+/angular/lib

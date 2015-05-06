@@ -10,37 +10,99 @@ angular.module('dashboard.controller', [
 'chat.controller',
         'authentication.service',
         'connectedUsers.controller',
-        'socket.service'
+        'listOfInvitations.controller',
+        'socket.service',
+        'ui.bootstrap'
     ])
-// Controlleur d'un formulaire de login
-    .controller("dashboardCtrl", function($scope, $http, $location , AuthenticationService ) {
-
+// Controlleur de la page Dashboard
+    .controller("dashboardCtrl", function($scope, $http, $location , AuthenticationService , $modal, $log) {
+        // On vérifie que l'utilisateur est authentifié, sinon on le redirige vers la page d'accueil
+        if(typeof(AuthenticationService.GetCredentials()) === "undefined")
+        {
+            $location.path('/');
+        }
         var socket = io();
-        //console.log(socket);
-        var usersList = [];
-        // Nous envoyons une requête au serveur pour récupérer la liste des utilisateurs connectés
-        setInterval(function () {
-            $scope.$apply(function () {
-        socket.emit('sendInvite');
-        socket.on('sendInvite', function(invite){
-            for (var i in invite)
+        var goToGame = false;
+      //  socket.emit('sendResponse');
+        var count = 0;
+        socket.on('sendResponse', function(invite){
+           console.log(invite.count);
+            if(typeof(invite)  !== "undefined" && invite !== null )
             {
-                if(invite.hasOwnProperty(i))
+                console.log("invite" + invite.fromUser.username + " " + AuthenticationService.GetCredentials().currentUser.username );
+                console.log("invite" + invite.fromUser.username + " " + AuthenticationService.GetCredentials().currentUser.username );
+
+            if (invite.fromUser.username === AuthenticationService.GetCredentials().currentUser.username || invite.ToUser.username === AuthenticationService.GetCredentials().currentUser.username)
+            {
+                console.log("response to invite , game coming soom wait " + JSON.stringify(invite));
+                if(count == 0)
                 {
-                    /*console.log(invite[i].ToUser.id );
-                    console.log(AuthenticationService.GetCredentials().currentUser.id );*/
-                    if(invite[i].ToUser.id === AuthenticationService.GetCredentials().currentUser.id)
-                    console.log(JSON.stringify(invite[i]));
+
+                        $scope.items = ['item1', 'item2', 'item3'];
+
+                        $scope.animationsEnabled = true;
+                        var modalInstance = "";
+                        /*$scope.open = function (size) {*/
+                        /* if(!$modal.isOpen())
+                         {*/     // console.log($modal.isOpen);
+
+                        $modal.open({
+
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'myModalContent.html',
+                            controller: 'ModalInstanceCtrl',
+                            size: 'sm',
+
+                            resolve: {
+                                items: function () {
+                                    return $scope.items;
+                                }
+                            }
+                        });
+
+
+                        console.log('test');
+                        count = count +1;
+                    console.log(count);
+
+                        /* modalInstance.result.then(function (selectedItem) {
+                         $scope.selected = selectedItem;
+                         }, function () {
+                         $log.info('Modal dismissed at: ' + new Date());
+                         });
+
+                         };*/
+
+                        $scope.toggleAnimation = function () {
+                            $scope.animationsEnabled = !$scope.animationsEnabled;
+                        };
 
                 }
+
+
             }
-
-
+            }
+          //  }
         });
+
+
+
+    })
+
+.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+
+            $scope.items = items;
+            $scope.selected = {
+                item: $scope.items[0]
+            };
+
+            $scope.ok = function () {
+                $modalInstance.close($scope.selected.item);
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
         });
-        }, 5000);
 
 
-
-
-    });
