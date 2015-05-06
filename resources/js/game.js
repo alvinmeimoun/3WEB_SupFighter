@@ -14,7 +14,7 @@ var canvas, ctx, player, ennemy,
     upKey = false,
     downKey = false;
 
-var damageHandledUpper = false;
+var damageHandledUpper = false, damageHandlerKick = false;
 
 function clearCanvas() {
     ctx.clearRect(0, 0, width, height);
@@ -45,10 +45,18 @@ function drawShip() {
         ennemy.life -= DAMAGE_UPPER;
         damageHandledUpper = true;
     }
+    //Check damage kick
+    if(!damageHandlerKick && collision && kickKey){
+        ennemy.life -= DAMAGE_KICK;
+        damageHandlerKick = true;
+    }
 
     //On reset l'état des handler damage
     if(!uppercutKey){
         damageHandledUpper = false;
+    }
+    if(!kickKey){
+        damageHandlerKick = false;
     }
 
     console.log(ennemy.life);
