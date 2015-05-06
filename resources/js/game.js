@@ -22,44 +22,39 @@ function clearCanvas() {
 
 function drawShip() {
     if (rightKey) {
-        if(player.x + 5 <= width-player.width){
+        if (player.x + 5 <= width - player.width) {
             player.x += 5;
             player.srcX = 83;
         }
     } else if (leftKey) {
-        if(player.x - 5 >= -10){
+        if (player.x - 5 >= -10) {
             player.x -= 5;
             player.srcX = 156;
         }
     }
-    else if (jumpKey) {
 
-    }
     player.draw(ctx);
     ennemy.draw(ctx);
-
-    if (rightKey == false || leftKey == false || uppercutKey == false || kickKey == false || jumpKey == false || crouchKey == false ) {
-        player.srcX = 10;
-    }
 
     var collision = isInCollision(player, ennemy);
 
     //Check damage upper
-    if(!damageHandledUpper && collision && uppercutKey){
+    if (!damageHandledUpper && collision && uppercutKey) {
         sendDegats(DAMAGE_UPPER);
         damageHandledUpper = true;
     }
     //Check damage kick
-    if(!damageHandlerKick && collision && kickKey){
+    if (!damageHandlerKick && collision && kickKey) {
         sendDegats(DAMAGE_KICK);
         damageHandlerKick = true;
+        console.log("BAM KICK");
     }
 
     //On reset l'état des handler damage
-    if(!uppercutKey){
+    if (!uppercutKey) {
         damageHandledUpper = false;
     }
-    if(!kickKey){
+    if (!kickKey) {
         damageHandlerKick = false;
     }
 }
@@ -74,7 +69,7 @@ function keyDown(e) {
     //Documentation key
     //http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
 
-    //Fléche droite
+    //Fléche RIGHT
     if (e.keyCode == 39) {
         rightKey = true;
 
@@ -84,17 +79,17 @@ function keyDown(e) {
             rightKey = false;
         }
         //KickRight pressée au moment du déplacement == le player s'arrête
-        else if (kickKey == true){
+        else if (kickKey == true) {
             player.x += 0;
             rightKey = false;
         }
         //Crouch pressée au moment du déplacement == le player s'arrête
-        else if (crouchKey == true){
+        else if (crouchKey == true) {
             player.x += 0;
             rightKey = false;
         }
     }
-    //Fléche gauche
+    //Fléche LEFT
     else if (e.keyCode == 37) {
         leftKey = true;
 
@@ -104,34 +99,19 @@ function keyDown(e) {
             leftKey = false;
         }
         //KickRight pressée au moment du déplacement == le player s'arrête
-        else if (kickKey == true){
+        else if (kickKey == true) {
             player.x -= 0;
             leftKey = false;
         }
         //crouch pressée au moment du déplacement == le player s'arrête
-        else if (crouchKey == true){
+        else if (crouchKey == true) {
             player.x -= 0;
             leftKey = false;
         }
     }
 
-    //Touche A Uppercut
+    //Touche A UPPERCUT
     else if (e.keyCode == 65) {
-
-        //Touche droite préssée au moment du Upper == Sprite kick Droite
-        if(rightKey == true){
-            player.imageKey = STICKMAN_UPPERRIGHT;
-        }
-        //Touche gauche préssée au moment du Upper == Sprite kick Gauche
-        else if(leftKey == true){
-            player.imageKey = STICKMAN_UPPERLEFT;
-        }
-        //Disparaîtra avec les futur mises à jour
-        //Pose probléme vu que le profil n'est pas bloquer
-        //Touche rightKey && leftKey préssée == Upper de base
-        else if (rightKey == false && leftKey == false){
-            //player.imageKey = STICKMAN_UPPERRIGHT;
-        }
 
         //Touche droite ou gauche pressée au moment de l'uppercut == le player ne bouge plus
         if (rightKey == true || leftKey == true) {
@@ -142,29 +122,29 @@ function keyDown(e) {
             leftKey = false;
             player.x -= 0;
         }
-
+        player.imageKey = STICKMAN_UPPER;
         uppercutKey = true;
     }
 
-    //Touche Z Kick + Augmentation de la largeur pour le sprite Kick
+    //Touche Z KICK + Augmentation de la largeur pour le sprite Kick
     else if (e.keyCode == 90) {
 
-        console.log("right " + rightKey);
-        console.log("left " + leftKey);
-
         //Touche droite préssée au moment du Kick == Sprite kick Droite
-        if(rightKey == true && leftKey == false){
-            player.imageKey = STICKMAN_KICKRIGHT;
+        if (player.srcX == 83) {
+
+            //Width couvre une plus grande zone sur le sprite
+            player.width = 80;
+            player.srcX = 23;
+            player.imageKey = STICKMAN_KICK;
+
         }
         //Touche gauche préssée au moment du Kick == Sprite kick Gauche
-        else if(leftKey == true && rightKey == false){
-            player.imageKey = STICKMAN_KICKLEFT;
-        }
-        //Disparaîtra avec les futur mises à jour
-        //Pose probléme vu que le profil n'est pas bloquer
-        //Touche rightKey && leftKey préssée == Kick de base
-        else if (rightKey == false && leftKey == false){
-            //player.imageKey = STICKMAN_KICKRIGHT;
+        else if (player.srcX == 156) {
+
+            player.width = 92;
+            player.srcX = 140;
+            player.imageKey = STICKMAN_KICK;
+
         }
 
         //Touche droite ou gauche pressée au moment du KickRight == le player ne bouge plus
@@ -177,20 +157,34 @@ function keyDown(e) {
             player.x -= 0;
         }
 
-        player.width = 100;
         kickKey = true;
     }
 
-    //Touche space == Jump + Augmentation de la valeur du saut
+    //Touche space == JUMP + Augmentation de la valeur du saut
     else if (e.keyCode == 32) {
         player.y = height - 340;
         player.imageKey = STICKMAN_NORMAL;
         jumpKey = true;
     }
-    //Touche bas == accroupir
+    //Touche bas == CROUCH
     else if (e.keyCode == 40) {
 
-        player.imageKey = STICKMAN_KICKCROUCH;
+        //Taille RIGHT quand le kick est relachée
+        if (player.srcX == 23) {
+
+            player.width = 67;
+            player.srcX = 83;
+            player.imageKey = STICKMAN_NORMAL;
+        }
+        //Taille LEFT quand le kick est relachée
+        else if (player.srcX == 140) {
+
+            player.width = 67;
+            player.srcX = 156;
+            player.imageKey = STICKMAN_NORMAL;
+        }
+
+        player.imageKey = STICKMAN_CROUCH;
 
         //Touche droite ou gauche pressée au moment de s'accroupir == le player ne bouge plus
         if (rightKey == true || leftKey == true) {
@@ -224,11 +218,26 @@ function keyUp(e) {
         uppercutKey = false;
         player.imageKey = STICKMAN_NORMAL;
     }
-    //Touche kick == touche relachée + Affichage sprite de base + Rétablissement de la largeur de base
+    //Touche kick == touche relachée + Affichage sprite de base + Rétablissement de la largeur et de la taille du sprite pris en compte
     else if (e.keyCode == 90) {
+
         kickKey = false;
-        player.width = 67;
-        player.imageKey = STICKMAN_NORMAL;
+
+        //Taille pour RIGHT
+        if (player.srcX == 23) {
+
+            player.width = 67;
+            player.srcX = 83;
+            player.imageKey = STICKMAN_NORMAL;
+        }
+        //Taille pour LEFT
+        else if (player.srcX == 140) {
+
+            player.width = 67;
+            player.srcX = 156;
+            player.imageKey = STICKMAN_NORMAL;
+        }
+
     }
     //Touche space == touche relachée + Rétablissement de la hauteur de base
     else if (e.keyCode == 32) {
@@ -249,13 +258,15 @@ function launchGame() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 10, 0, STICKMAN_NORMAL, false);
-    ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 10, 0, STICKMAN_NORMAL, true);
+    player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
+    ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
 
     setInterval(loop, 1000 / 30);
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
-};
+    console.log("Launch GAME");
+
+}
 
 function isInCollision(playerA, playerB) {
     return playerA.x < playerB.x + (playerB.width / 2) &&
@@ -264,14 +275,14 @@ function isInCollision(playerA, playerB) {
         playerA.y + playerA.height > playerB.y + 65;
 }
 
-function sendDegats(_degats){
+function sendDegats(_degats) {
     ennemy.life -= _degats;
 
-    _degatsMessageJson = '{ "degats" : "'+_degats+'" }';
+    _degatsMessageJson = '{ "degats" : "' + _degats + '" }';
     //TODO envoyer le message de degats
 }
 
-function receiveDegats(jsonString){
+function receiveDegats(jsonString) {
     var objFromJson = JSON.parse(jsonString);
     player.life -= objFromJson.degats;
 }

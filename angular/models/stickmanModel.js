@@ -1,9 +1,7 @@
 var STICKMAN_NORMAL = "KEY_STICKMAN_NORMAL";
-var STICKMAN_UPPERRIGHT = "KEY_STICKMAN_UPPERRIGHT";
-var STICKMAN_UPPERLEFT = "KEY_STICKMAN_UPPERLEFT";
-var STICKMAN_KICKRIGHT = "KEY_SICKMAN_KICKRIGHT";
-var STICKMAN_KICKLEFT = "KEY_STICKMAN_KICKLEFT";
-var STICKMAN_KICKCROUCH = "KEY_STICKMAN_KICKCROUCH";
+var STICKMAN_UPPER = "KEY_STICKMAN_UPPER";
+var STICKMAN_KICK = "KEY_STICKMAN_KICK";
+var STICKMAN_CROUCH = "KEY_STICKMAN_CROUCH";
 
 function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnemy) {
     var player = {
@@ -57,15 +55,11 @@ function getStickmanImagePathFromKey(_imageKey, _isEnnemy){
     if(_imageKey == STICKMAN_NORMAL){
         if(_isEnnemy) return 'resources/pictures/game/stickman_sprite_ennemy.png';
         else return 'resources/pictures/game/stickman_sprite.png';
-    } else if (_imageKey == STICKMAN_UPPERRIGHT){
-        return 'resources/pictures/game/stickman_sprite_upperRight.png';
-    } else if (_imageKey == STICKMAN_UPPERLEFT){
-        return 'resources/pictures/game/stickman_sprite_upperLeft.png';
-    } else if (_imageKey == STICKMAN_KICKRIGHT){
-        return 'resources/pictures/game/stickman_sprite_kickRight.png';
-    } else if (_imageKey == STICKMAN_KICKLEFT){
-        return 'resources/pictures/game/stickman_sprite_kickLeft.png';
-    } else if (_imageKey == STICKMAN_KICKCROUCH){
+    }  else if (_imageKey == STICKMAN_CROUCH){
         return 'resources/pictures/game/stickman_sprite_crouch.png';
+    } else if (_imageKey == STICKMAN_KICK){
+        return 'resources/pictures/game/stickman_sprite_kick.png'
+    } else if (_imageKey == STICKMAN_UPPER){
+        return 'resources/pictures/game/stickman_sprite_uppercut.png'
     }
 }
