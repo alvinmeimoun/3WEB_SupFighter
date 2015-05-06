@@ -22,11 +22,15 @@ function clearCanvas() {
 
 function drawShip() {
     if (rightKey) {
-        player.x += 5;
-        player.srcX = 83;
+        if(player.x + 5 <= width-player.width){
+            player.x += 5;
+            player.srcX = 83;
+        }
     } else if (leftKey) {
-        player.x -= 5;
-        player.srcX = 156;
+        if(player.x - 5 >= -10){
+            player.x -= 5;
+            player.srcX = 156;
+        }
     }
     else if (jumpKey) {
 
