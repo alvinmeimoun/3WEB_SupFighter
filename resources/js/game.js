@@ -58,7 +58,8 @@ function drawShip() {
         damageHandlerKick = false;
     }
 
-    console.log(ennemy.life);
+    console.log(player.image.src);
+    console.log(player.toJson());
 }
 
 function loop() {

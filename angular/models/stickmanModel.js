@@ -18,6 +18,19 @@ function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageSrc) {
 
         draw: function(_context) {
             _context.drawImage(this.image, this.srcX, this.srcY, this.width, this.height, this.x, this.y, this.width, this.height);
+        },
+
+        toJson: function(){
+            return '{ ' +
+                '"x": "'+ this.x + '"' +
+                ',"y": "'+ + this.y + '"' +
+                ',"width": "'+ + this.width + '"' +
+                ',"height": "'+ + this.height + '"' +
+                ',"imageSource": "'+ + this.image.src + '"' +
+                ',"srcX": "'+ + this.srcX + '"' +
+                ',"srcY": "'+ + this.srcY + '"' +
+                ',"life": "'+ + this.life + '"' +
+                ' }';
         }
     };
     player.image.src = _imageSrc;
