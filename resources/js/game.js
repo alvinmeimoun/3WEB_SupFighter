@@ -13,6 +13,8 @@ var canvas, ctx, player, ennemy,
     upKey = false,
     downKey = false;
 
+var damageHandledUpper = false;
+
 function clearCanvas() {
     ctx.clearRect(0, 0, width, height);
 }
@@ -33,6 +35,19 @@ function drawShip() {
     }
 
     var collision = isInCollision(player, ennemy);
+
+    //Check damage upper
+    if(!damageHandledUpper && collision && uppercutKey){
+        ennemy.life -= DAMAGE_UPPER;
+        damageHandledUpper = true;
+    }
+
+    //On reset l'état des handler damage
+    if(!uppercutKey){
+        damageHandledUpper = false;
+    }
+
+    console.log(ennemy.life);
 }
 
 function loop() {
