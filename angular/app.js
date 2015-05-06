@@ -9,8 +9,8 @@ var myApp = angular.module("MyApp", [
     'ngRoute',
     'ngCookies',
     'toastr',
-        'btford.socket-io',
-        'ui.bootstrap',
+    'btford.socket-io',
+    'ui.bootstrap',
     'authentication.service',
     'login.controller',
     'register.controller',
@@ -19,9 +19,6 @@ var myApp = angular.module("MyApp", [
     'gamezone.controller',
     'gameboard.controller',
     'socket.service',
-    'chat.controller',
-        'connectedUsers.controller',
-
     'dashboard.controller'
 ])
 .config(['$routeProvider',

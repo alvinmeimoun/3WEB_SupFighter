@@ -9,13 +9,77 @@
 
 angular.module('chat.controller', [
         'authentication.service',
-        'socket.service'
+        'socket.service',
+        'ui.bootstrap'
     ])
 // Controlleur du chat
-    .controller("chatCtrl", function($scope, $http, $location, AuthenticationService,mySocket ) {
+    .controller("chatCtrl", function($scope, $http, $location, AuthenticationService,mySocket, $modal ) {
 
         // On set l'username dans le local storage pour son utilisation dans le chat
         localStorage.setItem("user",AuthenticationService.GetCredentials().currentUser.username);
+        var socket = io();
+        socket.emit('listenToResponse');
+
+        socket.on('listenToResponse', function(invite){
+            //console.log(invite.count);
+
+            if(typeof(invite)  !== "undefined" || invite !== null )
+            {
+                console.log("invite" + invite.fromUser.username + " " + AuthenticationService.GetCredentials().currentUser.username );
+
+                if (invite.fromUser.username === AuthenticationService.GetCredentials().currentUser.username || invite.ToUser.username === AuthenticationService.GetCredentials().currentUser.username )
+                {
+                    console.log("response to invite , game coming soom wait " + JSON.stringify(invite.response));
+                    if(invite.response === "accepted")
+                    {
+                        $scope.response = true;
+                    }
+                    else
+                    {
+                        $scope.response = false;
+                    }
+
+
+                    console.log($scope.response);
+                    $scope.items = [invite.fromUser.username, invite.ToUser.username];
+                    $scope.animationsEnabled = true;
+                    $modal.open({
+
+                            animation: $scope.animationsEnabled,
+                            templateUrl: 'myModalContent.html',
+                            controller: 'ModalInstanceCtrl',
+                            size: 'sm',
+                            opened: true,
+
+                            resolve: {
+                                items: function () {
+                                    return $scope.items;
+                                },
+                                response: function() {
+                                    return $scope.response;
+                                }
+
+
+                            }
+                        });
+
+                         socket.emit('RemoveInvitation', invite);
+
+                        /* modalInstance.result.then(function (selectedItem) {
+                         $scope.selected = selectedItem;
+                         }, function () {
+                         $log.info('Modal dismissed at: ' + new Date());
+                         });
+
+                         };*/
+                    }
+                    $scope.toggleAnimation = function () {
+                        $scope.animationsEnabled = !$scope.animationsEnabled;
+                    };
+
+                }
+
+        });
     })
 
 
@@ -121,4 +185,26 @@ angular.module('chat.controller', [
         }
 
     };
-});
+})
+    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, items, response, $location) {
+
+        $scope.items = items;
+        $scope.response = response;
+        $scope.selected = {
+            item: $scope.items[0]
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close();
+            $location.path('/game');
+
+
+
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    });
+
+
