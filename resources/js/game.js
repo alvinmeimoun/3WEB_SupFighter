@@ -10,6 +10,7 @@ var canvas, ctx, player, ennemy,
     uppercutKey = false,
     kickKey = false,
     jumpKey = false,
+    crouchKey = false,
     upKey = false,
     downKey = false;
 
@@ -33,7 +34,7 @@ function drawShip() {
     player.draw(ctx);
     ennemy.draw(ctx);
 
-    if (rightKey == false || leftKey == false || uppercutKey == false || kickKey == false || jumpKey == false) {
+    if (rightKey == false || leftKey == false || uppercutKey == false || kickKey == false || jumpKey == false || crouchKey == false ) {
         player.srcX = 10;
     }
 
@@ -77,6 +78,11 @@ function keyDown(e) {
             player.x += 0;
             rightKey = false;
         }
+        //Crouch pressée au moment du déplacement == le player s'arrête
+        else if (crouchKey == true){
+            player.x += 0;
+            rightKey = false;
+        }
     }
     //Fléche gauche
     else if (e.keyCode == 37) {
@@ -89,6 +95,11 @@ function keyDown(e) {
         }
         //KickRight pressée au moment du déplacement == le player s'arrête
         else if (kickKey == true){
+            player.x -= 0;
+            leftKey = false;
+        }
+        //crouch pressée au moment du déplacement == le player s'arrête
+        else if (crouchKey == true){
             player.x -= 0;
             leftKey = false;
         }
@@ -166,6 +177,22 @@ function keyDown(e) {
         player.image.src = STICKMAN_NORMAL;
         jumpKey = true;
     }
+    //Touche bas == accroupir
+    else if (e.keyCode == 40) {
+
+        player.image.src = STICKMAN_KICKCROUCH;
+
+        //Touche droite ou gauche pressée au moment de s'accroupir == le player ne bouge plus
+        if (rightKey == true || leftKey == true) {
+
+            rightKey = false;
+            player.x += 0;
+
+            leftKey = false;
+            player.x -= 0;
+        }
+        crouchKey = true;
+    }
 }
 
 function keyUp(e) {
@@ -176,6 +203,7 @@ function keyUp(e) {
     //Fléche droite == touche relachée
     if (e.keyCode == 39) {
         rightKey = false;
+
     }
     //Fléche gauche == touche relachée
     else if (e.keyCode == 37) {
@@ -195,7 +223,17 @@ function keyUp(e) {
     //Touche space == touche relachée + Rétablissement de la hauteur de base
     else if (e.keyCode == 32) {
         player.y = height - 200;
+        jumpKey = false;
+
     }
+    //Touche bas == touche relachée + Affichage sprite de base
+    else if (e.keyCode == 40) {
+
+        player.image.src = STICKMAN_NORMAL;
+        crouchKey = false;
+    }
+
+
 }
 
 
