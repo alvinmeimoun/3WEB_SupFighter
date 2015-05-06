@@ -46,12 +46,12 @@ function drawShip() {
 
     //Check damage upper
     if(!damageHandledUpper && collision && uppercutKey){
-        ennemy.life -= DAMAGE_UPPER;
+        sendDegats(DAMAGE_UPPER);
         damageHandledUpper = true;
     }
     //Check damage kick
     if(!damageHandlerKick && collision && kickKey){
-        ennemy.life -= DAMAGE_KICK;
+        sendDegats(DAMAGE_KICK);
         damageHandlerKick = true;
     }
 
@@ -242,8 +242,6 @@ function keyUp(e) {
         player.imageKey = STICKMAN_NORMAL;
         crouchKey = false;
     }
-
-
 }
 
 
@@ -264,4 +262,16 @@ function isInCollision(playerA, playerB) {
         playerA.x + playerA.width / 2 > playerB.x &&
         playerA.y < playerB.y + playerB.height - 65 &&
         playerA.y + playerA.height > playerB.y + 65;
+}
+
+function sendDegats(_degats){
+    ennemy.life -= _degats;
+
+    _degatsMessageJson = '{ "degats" : "'+_degats+'" }';
+    //TODO envoyer le message de degats
+}
+
+function receiveDegats(jsonString){
+    var objFromJson = JSON.parse(jsonString);
+    player.life -= objFromJson.degats;
 }
