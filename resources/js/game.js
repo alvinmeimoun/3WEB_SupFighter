@@ -11,6 +11,7 @@ var canvas, ctx, player, ennemy,
     kickKey = false,
     jumpKey = false,
     crouchKey = false,
+    blockKey = false,
     upKey = false,
     downKey = false;
 
@@ -88,6 +89,11 @@ function keyDown(e) {
             player.x += 0;
             rightKey = false;
         }
+        //block préssée au moment du déplacement == le player s'arrête
+        else if (blockKey == true) {
+            player.x += 0;
+            rightKey = false;
+        }
     }
     //Fléche LEFT
     else if (e.keyCode == 37) {
@@ -105,6 +111,11 @@ function keyDown(e) {
         }
         //crouch pressée au moment du déplacement == le player s'arrête
         else if (crouchKey == true) {
+            player.x -= 0;
+            leftKey = false;
+        }
+        //block préssée au moment du déplacement == le player s'arrête
+        else if (blockKey == true) {
             player.x -= 0;
             leftKey = false;
         }
@@ -169,14 +180,14 @@ function keyDown(e) {
     //Touche bas == CROUCH
     else if (e.keyCode == 40) {
 
-        //Taille RIGHT quand le kick est relachée
+        //Taille RIGHT quand le block est relachée
         if (player.srcX == 23) {
 
             player.width = 67;
             player.srcX = 83;
             player.imageKey = STICKMAN_NORMAL;
         }
-        //Taille LEFT quand le kick est relachée
+        //Taille LEFT quand le block est relachée
         else if (player.srcX == 140) {
 
             player.width = 67;
@@ -196,6 +207,25 @@ function keyDown(e) {
             player.x -= 0;
         }
         crouchKey = true;
+    }
+
+    //Touche F == Block
+    else if (e.keyCode == 70) {
+
+        player.imageKey = STICKMAN_BLOCK;
+        blockKey = true;
+
+        //Touche droite ou gauche pressée au moment de s'accroupir == le player ne bouge plus
+        if (rightKey == true || leftKey == true) {
+
+            rightKey = false;
+            player.x += 0;
+
+            leftKey = false;
+            player.x -= 0;
+        }
+
+
     }
 }
 
@@ -250,6 +280,14 @@ function keyUp(e) {
 
         player.imageKey = STICKMAN_NORMAL;
         crouchKey = false;
+    }
+
+    //Touche F == BLOCK + Affichage du sprite de base
+    else if (e.keyCode == 70) {
+
+        player.imageKey = STICKMAN_NORMAL;
+        blockKey = false;
+
     }
 }
 
