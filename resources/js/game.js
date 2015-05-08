@@ -26,38 +26,21 @@ function clearCanvas() {
 }
 
 function drawShip() {
+
+    if(player === undefined) createPlayers();
+
     if (rightKey) {
-        var playerNumber =  getCurrentPlayer();
-        console.log("player number" + playerNumber);
-        if (playerNumber === 1){
             if (player.x + 5 <= width - player.width) {
                 player.x += 5;
                 player.srcX = 83;
             }
-        }
-
-       if (playerNumber === 2){
-            if (ennemy.x + 5 <= width - player.width) {
-                ennemy.x += 5;
-                ennemy.srcX = 83;
-            }
-        }
 
     } else if (leftKey) {
-        var playerNumber =  getCurrentPlayer();
-        if (playerNumber === 1){
             if (player.x - 5 >= -10) {
                 player.x -= 5;
                 player.srcX = 156;
             }
         }
-        if (playerNumber === 2){
-            if (ennemy.x - 5 >= -10) {
-                ennemy.x -= 5;
-                ennemy.srcX = 156;
-            }
-        }
-    }
 
     player.draw(ctx);
     ennemy.draw(ctx);
@@ -346,9 +329,6 @@ function launchGame() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
-    ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
-
     setInterval(loop, 1000 / 30);
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
@@ -356,19 +336,29 @@ function launchGame() {
 
 
     console.log('local storage ' + localStorage.getItem("user"));
-    //var players = [];
-   // console.log('current user ' + currentUser);
+
     var socket = io();
     socket.emit('get Players');
     socket.on('get Players', function(players){
         //console.log('recept '+ players);
         playersOnline = players;
-
     });
 
-
-
 }
+
+function createPlayers(){
+    var playerNumber =  getCurrentPlayer();
+
+    if (playerNumber === 1) {
+        player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
+        ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
+    } else if (playerNumber === 2){
+        ennemy = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, true);
+        player = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, false);
+    }
+}
+
+
 var playerNumber;
 function getCurrentPlayer(){
 
