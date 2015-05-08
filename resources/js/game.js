@@ -33,20 +33,16 @@ function drawShip() {
     //Affichage Text Player1
     ctx.font = "15px ARIAL";
     ctx.fillStyle = "black";
-    ctx.fillText("PLAYER 1", 10, 15);
+    ctx.fillText("PLAYER", 10, 15);
 
     //Affichage Text Player2
     ctx.font = "15px ARIAL";
     ctx.fillStyle = "black";
-    ctx.fillText("PLAYER 2", 350, 15);
+    ctx.fillText("ENNEMY", 350, 15);
 
     //Barre de vie du Player
     ctx.fillStyle = "red";
-    if(getCurrentPlayer() === 1){
-        ctx.fillRect(10, 25, (ennemy.life / 100) * 140, 25);
-    } else if(getCurrentPlayer() === 2){
-        ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
-    }
+    ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
 
 
     //Bordure de la barre de vie du Player
@@ -56,11 +52,7 @@ function drawShip() {
 
     //Barre de vie de l'ennemy
     ctx.fillStyle = "#FF0000";
-    if(getCurrentPlayer() === 1){
-        ctx.fillRect(350, 25, (player.life / 100) * 140, 25);
-    } else if(getCurrentPlayer() === 2){
-        ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
-    }
+    ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
 
 
     //Bordure de la barre de vie de l'ennemy
