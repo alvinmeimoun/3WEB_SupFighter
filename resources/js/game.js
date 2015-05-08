@@ -1,6 +1,7 @@
-var DAMAGE_UPPER = 10;
-var DAMAGE_KICK = 5;
+var DAMAGE_UPPER = 5;
+var DAMAGE_KICK = 10;
 var DAMAGE_PUNCH = 5;
+var DAMAGE_FATALITY = 30;
 
 var canvas, ctx, player, ennemy,
     width = 500,
@@ -23,6 +24,35 @@ function clearCanvas() {
 }
 
 function drawShip() {
+
+    //Affichage Text Player1
+    ctx.font = "15px ARIAL";
+    ctx.fillStyle = "black";
+    ctx.fillText("PLAYER 1", 10, 15);
+
+    //Affichage Text Player2
+    ctx.font = "15px ARIAL";
+    ctx.fillStyle = "black";
+    ctx.fillText("PLAYER 2", 350, 15);
+
+    //Barre de vie du Player
+    ctx.fillStyle = "red";
+    ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
+
+    //Bordure de la barre de vie du Player
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(10, 25, 140, 25);
+
+    //Barre de vie de l'ennemy
+    ctx.fillStyle = "#FF0000";
+    ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
+
+    //Bordure de la barre de vie de l'ennemy
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(350, 25, 140, 25);
+
     if (rightKey) {
         if (player.x + 5 <= width - player.width) {
             player.x += 5;
@@ -41,15 +71,25 @@ function drawShip() {
     var collision = isInCollision(player, ennemy);
 
     //Check damage upper
-    if (!damageHandledUpper && collision && uppercutKey) {
-        sendDegats(DAMAGE_UPPER);
-        damageHandledUpper = true;
+    if (!damageHandledUpper && collision && uppercutKey && ennemy.life >= 0 ) {
+
+        if (ennemy.life > 0 && ennemy.life <= 100) {
+            sendDegats(DAMAGE_UPPER);
+            damageHandledUpper = true;
+        }
+
+        console.log(ennemy.life);
     }
-    //Check damage kick
-    if (!damageHandlerKick && collision && kickKey) {
-        sendDegats(DAMAGE_KICK);
-        damageHandlerKick = true;
-        console.log("BAM KICK");
+    //Check damage kick + vie supérieur à 0
+    if (!damageHandlerKick && collision && kickKey && ennemy.life > 0) {
+
+        if (ennemy.life > 0 && ennemy.life <= 100) {
+            sendDegats(DAMAGE_KICK);
+            damageHandlerKick = true;
+
+        }
+
+        console.log(ennemy.life);
     }
 
     //On reset l'état des handler damage
@@ -181,9 +221,6 @@ function keyDown(e) {
     //Touche bas == CROUCH
     else if (e.keyCode == 40) {
 
-        console.log("CROUCH CHROUCH " +crouchKey);
-        console.log("BLOCK BLOCK " +blockKey);
-
         //Taille RIGHT quand le block est relachée
         if (player.srcX == 23) {
 
@@ -216,13 +253,11 @@ function keyDown(e) {
     //Touche F == Block
     else if (e.keyCode == 70) {
 
-        console.log("CROUCH  " +crouchKey);
-        console.log("BLOCK  " +blockKey);
         player.imageKey = STICKMAN_BLOCK;
         blockKey = true;
 
         //Si au moment du blocage il détecte que le crouch est activé alors le sprite passe a crouchBlock
-        if(crouchKey == true){
+        if (crouchKey == true) {
 
             player.imageKey = STICKMAN_CROUCH_BLOCK;
             crouchBlock = true;
@@ -238,8 +273,6 @@ function keyDown(e) {
             leftKey = false;
             player.x -= 0;
         }
-
-
     }
 }
 
@@ -306,11 +339,12 @@ function keyUp(e) {
         console.log("Block " + blockKey);
         //Si on relache crouch en étant accroupis alors on repasse au crouch de base
         /*if(crouchBlock == true ){
-            player.imageKey = STICKMAN_CROUCH;
-            crouchBlock = false;
-        }
+         player.imageKey = STICKMAN_CROUCH;
+         crouchBlock = false;
+         }
 
-       else*/ if(blockKey == true){
+         else*/
+        if (blockKey == true) {
             player.imageKey = STICKMAN_NORMAL;
             blockKey = false;
         }
@@ -341,6 +375,7 @@ function isInCollision(playerA, playerB) {
 
 function sendDegats(_degats) {
     ennemy.life -= _degats;
+
 
     _degatsMessageJson = '{ "degats" : "' + _degats + '" }';
     //TODO envoyer le message de degats
