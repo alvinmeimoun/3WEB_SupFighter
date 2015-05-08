@@ -55,7 +55,12 @@ function drawShip() {
 
     //Barre de vie du Player
     ctx.fillStyle = "red";
-    ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
+    if(isPlayerReverse){
+        ctx.fillRect(10, 25, (ennemy.life / 100) * 140, 25);
+    } else {
+        ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
+    }
+
 
 
     //Bordure de la barre de vie du Player
@@ -65,7 +70,12 @@ function drawShip() {
 
     //Barre de vie de l'ennemy
     ctx.fillStyle = "#FF0000";
-    ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
+    if(isPlayerReverse){
+        ctx.fillRect(350, 25, (player.life / 100) * 140, 25);
+    } else {
+        ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
+    }
+
 
 
     //Bordure de la barre de vie de l'ennemy
