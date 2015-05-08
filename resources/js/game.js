@@ -30,15 +30,28 @@ function drawShip() {
     //Creation des players si non deja crées
     if(player === undefined) createPlayers();
 
-    //Affichage Text Player1
-    ctx.font = "15px ARIAL";
-    ctx.fillStyle = "black";
-    ctx.fillText("PLAYER", 10, 15);
 
-    //Affichage Text Player2
+    //BARRES DE VIE
+    var barViePlayerX;
+    var barVieEnnemyX;
+
+    if(!isPlayerReverse){
+        barVieEnnemyX = 350;
+        barViePlayerX = 10;
+    } else {
+        barVieEnnemyX = 10;
+        barViePlayerX = 350;
+    }
+
+    //Affichage Text Player
     ctx.font = "15px ARIAL";
     ctx.fillStyle = "black";
-    ctx.fillText("ENNEMY", 350, 15);
+    ctx.fillText("PLAYER", barViePlayerX, 15);
+
+    //Affichage Text Ennemy
+    ctx.font = "15px ARIAL";
+    ctx.fillStyle = "black";
+    ctx.fillText("ENNEMY", barVieEnnemyX, 15);
 
     //Barre de vie du Player
     ctx.fillStyle = "red";
@@ -381,13 +394,16 @@ function launchGame() {
 
 }
 
+var isPlayerReverse = false;
 function createPlayers(){
     var playerNumber =  getCurrentPlayer();
 
     if (playerNumber === 1) {
+        isPlayerReverse = false;
         player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
         ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
     } else if (playerNumber === 2){
+        isPlayerReverse = true;
         ennemy = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, true);
         player = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, false);
     }
