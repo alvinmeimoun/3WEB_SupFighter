@@ -5,14 +5,15 @@ angular.module('gamezone.controller', [
 ])
 
 
-    .controller('gamezoneCtrl', function($scope,$location,$http)
+    .controller('gamezoneCtrl', function($scope,$location,$http, AuthenticationService)
     {
+
 
 
 
     })
 
-    .directive('gamezone' , function()
+    .directive('gamezone' , function(AuthenticationService)
     {
         return {
             restrict: 'E',
@@ -20,6 +21,10 @@ angular.module('gamezone.controller', [
             replace: true,
             templateUrl: '/angular/views/gamezone.html',
             link: function(scope, elem, attrs ) {
+                //var socket = io();
+                //console.log('local storage ' + localStorage.getItem("user"));
+                var currentUser = AuthenticationService.GetCredentials().currentUser;
+
                 launchGame();
             }
         };

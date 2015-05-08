@@ -186,7 +186,7 @@ angular.module('chat.controller', [
 
     };
 })
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, items, response, $location) {
+    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, items, response, $location, AuthenticationService) {
 
         $scope.items = items;
         $scope.response = response;
@@ -195,6 +195,9 @@ angular.module('chat.controller', [
         };
 
         $scope.ok = function () {
+            var socket = io();
+
+            socket.emit('add Player', AuthenticationService.GetCredentials().currentUser);
             $modalInstance.close();
             $location.path('/game');
 

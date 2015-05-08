@@ -12,7 +12,10 @@ var canvas, ctx, player, ennemy,
     jumpKey = false,
     crouchKey = false,
     upKey = false,
-    downKey = false;
+    downKey = false,
+    player1 = "",
+    player2 = "",
+    playersOnline = [];
 
 var damageHandledUpper = false, damageHandlerKick = false;
 
@@ -22,14 +25,35 @@ function clearCanvas() {
 
 function drawShip() {
     if (rightKey) {
-        if (player.x + 5 <= width - player.width) {
-            player.x += 5;
-            player.srcX = 83;
+        var playerNumber =  getCurrentPlayer();
+        console.log("player number" + playerNumber);
+        if (playerNumber === 1){
+            if (player.x + 5 <= width - player.width) {
+                player.x += 5;
+                player.srcX = 83;
+            }
         }
+
+       if (playerNumber === 2){
+            if (ennemy.x + 5 <= width - player.width) {
+                ennemy.x += 5;
+                ennemy.srcX = 83;
+            }
+        }
+
     } else if (leftKey) {
-        if (player.x - 5 >= -10) {
-            player.x -= 5;
-            player.srcX = 156;
+        var playerNumber =  getCurrentPlayer();
+        if (playerNumber === 1){
+            if (player.x - 5 >= -10) {
+                player.x -= 5;
+                player.srcX = 156;
+            }
+        }
+        if (playerNumber === 2){
+            if (ennemy.x - 5 >= -10) {
+                ennemy.x -= 5;
+                ennemy.srcX = 156;
+            }
         }
     }
 
@@ -265,6 +289,59 @@ function launchGame() {
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
     console.log("Launch GAME");
+
+
+    console.log('local storage ' + localStorage.getItem("user"));
+    //var players = [];
+   // console.log('current user ' + currentUser);
+    var socket = io();
+    socket.emit('get Players');
+    socket.on('get Players', function(players){
+        //console.log('recept '+ players);
+        playersOnline = players;
+
+    });
+
+
+
+}
+var playerNumber;
+function getCurrentPlayer(){
+
+var socket = io();
+    var currentPlayer = localStorage.getItem("user");
+    socket.emit('get Current Player', currentPlayer );
+    socket.on('current Player', function(number){
+        //console.log('recept '+ players);
+       playerNumber = number;
+
+    });
+    return playerNumber;
+    /*playersOnline.forEach(function(item)
+    {
+        switch (item.number){
+            case 1 : playerNumber = item.number;
+                break;
+            case 2 : playerNumber = item.number;
+                break;
+        }
+        return playerNumber;
+
+
+       /* if(item.username === localStorage.getItem("user") && item.number === 1)
+        {
+            //console.log(" current player 1 " + item.username);
+            playerNumber = item.number;
+            return playerNumber;
+
+        }
+        if(item.username === localStorage.getItem("user") && item.number === 2)
+        {
+            playerNumber = item.number;
+            //console.log(" current player 2" + item.username);
+            return playerNumber;
+        }*/
+    //});
 
 }
 
