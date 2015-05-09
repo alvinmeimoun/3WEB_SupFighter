@@ -249,6 +249,10 @@ io.on('connection', function(socket)
             io.emit("iUpdatePlayerPosition", playerJsonString);
         });
 
+        socket.on('sendDegats', function(degatsJsonString){
+           io.emit('ioSendDegats', degatsJsonString);
+            console.log(degatsJsonString);
+        });
 
 
 });

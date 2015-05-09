@@ -99,7 +99,12 @@ function drawShip() {
     player.draw(ctx);
     ennemy.draw(ctx);
 
-    var collision = isInCollision(player, ennemy);
+    var collision = false;
+    if(!isPlayerReverse){
+        collision = isInCollision(player, ennemy);
+    } else {
+        collision = isInCollision(ennemy, player);
+    }
 
     //Check damage upper
     if (!damageHandledUpper && collision && uppercutKey && ennemy.life >= 0 ) {
@@ -137,7 +142,7 @@ function loop() {
     drawShip();
 
     //Envoi mise à jour position joueur
-    sendPlayerInformation();
+    if(player != null) sendPlayerInformation();
 }
 
 function keyDown(e) {
@@ -420,6 +425,9 @@ function launchGame() {
         }
     });
 
+    socket.on('ioSendDegats', function(degatsJsonString){
+        receiveDegats(degatsJsonString);
+    });
 }
 
 var isPlayerReverse = false;
@@ -481,18 +489,24 @@ var socket = io();
 }
 
 function isInCollision(playerA, playerB) {
-    return playerA.x < playerB.x + (playerB.width / 2) &&
-        playerA.x + playerA.width / 2 > playerB.x &&
-        playerA.y < playerB.y + playerB.height - 65 &&
-        playerA.y + playerA.height > playerB.y + 65;
+    //return playerA.x < playerB.x + (playerB.width / 2) &&
+    //    playerA.x + playerA.width / 2 > playerB.x &&
+    //    playerA.y < playerB.y + playerB.height - 65 &&
+    //    playerA.y + playerA.height > playerB.y + 65;
+
+    return false;
 }
 
 function sendDegats(_degats) {
     ennemy.life -= _degats;
 
 
-    _degatsMessageJson = '{ "degats" : "' + _degats + '" }';
-    //TODO envoyer le message de degats
+    var __degatsMessageJson = '{ "degats" : "' + _degats + '"' +
+        ', "causedBy" : "' + player.name + '"' +
+        ', "infligeTo" : "'+ennemy.name+'" }';
+
+    var socket = io();
+    socket.emit('sendDegats', __degatsMessageJson);
 }
 
 function sendPlayerInformation(){
@@ -502,5 +516,9 @@ function sendPlayerInformation(){
 
 function receiveDegats(jsonString) {
     var objFromJson = JSON.parse(jsonString);
-    player.life -= objFromJson.degats;
+    if(objFromJson.causedBy !== currentPlayerName){
+        player.life -= objFromJson.degats;
+    }
+
+
 }
