@@ -305,6 +305,12 @@ function keyDown(e) {
             player.x -= 0;
         }
     }
+
+
+    //Envoi mise à jour position joueur
+    var socket = io();
+    socket.emit('updatePlayerPosition', player.toJson());
+    console.log('emit');
 }
 
 function keyUp(e) {
@@ -400,6 +406,12 @@ function launchGame() {
     socket.on('get Players', function(players){
         //console.log('recept '+ players);
         playersOnline = players;
+    });
+
+    console.log(localStorage.getItem("user").username);
+    //Broadcast listener
+    socket.on('iUpdatePlayerPosition', function(playerJsonString){
+        console.log('a ' + playerJsonString);
     });
 
 }

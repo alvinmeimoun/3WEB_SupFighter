@@ -243,9 +243,11 @@ io.on('connection', function(socket)
                     io.emit('current Player', number );
                 }
             });
+        });
 
-
-
+        socket.on('updatePlayerPosition', function(playerJsonString){
+            console.log('test '+playerJsonString);
+            io.emit("iUpdatePlayerPosition", playerJsonString);
         });
 
 
