@@ -246,7 +246,6 @@ io.on('connection', function(socket)
         });
 
         socket.on('updatePlayerPosition', function(playerJsonString){
-            console.log('test '+playerJsonString);
             io.emit("iUpdatePlayerPosition", playerJsonString);
         });
 

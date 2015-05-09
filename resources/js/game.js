@@ -46,7 +46,7 @@ function drawShip() {
     //Affichage Text Player
     ctx.font = "15px ARIAL";
     ctx.fillStyle = "black";
-    ctx.fillText("PLAYER", barViePlayerX, 15);
+    ctx.fillText(currentPlayerName, barViePlayerX, 15);
 
     //Affichage Text Ennemy
     ctx.font = "15px ARIAL";
@@ -135,6 +135,9 @@ function drawShip() {
 function loop() {
     clearCanvas();
     drawShip();
+
+    //Envoi mise à jour position joueur
+    sendPlayerInformation();
 }
 
 function keyDown(e) {
@@ -307,10 +310,8 @@ function keyDown(e) {
     }
 
 
-    //Envoi mise à jour position joueur
-    var socket = io();
-    socket.emit('updatePlayerPosition', player.toJson());
-    console.log('emit');
+    ////Envoi mise à jour position joueur
+    //sendPlayerInformation();
 }
 
 function keyUp(e) {
@@ -387,6 +388,9 @@ function keyUp(e) {
         }
 
     }
+    //
+    ////Envoi mise à jour position joueur
+    //sendPlayerInformation();
 }
 
 function launchGame() {
@@ -396,10 +400,10 @@ function launchGame() {
     setInterval(loop, 1000 / 30);
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
-    console.log("Launch GAME");
+    //console.log("Launch GAME");
 
 
-    console.log('local storage ' + localStorage.getItem("user"));
+    //console.log('local storage ' + localStorage.getItem("user"));
 
     var socket = io();
     socket.emit('get Players');
@@ -408,26 +412,30 @@ function launchGame() {
         playersOnline = players;
     });
 
-    console.log(localStorage.getItem("user").username);
     //Broadcast listener
     socket.on('iUpdatePlayerPosition', function(playerJsonString){
-        console.log('a ' + playerJsonString);
+        var objFromJson = JSON.parse(playerJsonString);
+        if(objFromJson.name !== currentPlayerName){
+            ennemy.updateFromJson(playerJsonString);
+        }
     });
 
 }
 
 var isPlayerReverse = false;
+var currentPlayerName = "PLAYER";
 function createPlayers(){
     var playerNumber =  getCurrentPlayer();
+    currentPlayerName = localStorage.getItem("user");
 
     if (playerNumber === 1) {
         isPlayerReverse = false;
-        player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
-        ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
+        player = StickmanModel(currentPlayerName, (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
+        ennemy = StickmanModel('', (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
     } else if (playerNumber === 2){
         isPlayerReverse = true;
-        ennemy = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, true);
-        player = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, false);
+        ennemy = StickmanModel('', (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, true);
+        player = StickmanModel(currentPlayerName, (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, false);
     }
 }
 
@@ -485,6 +493,11 @@ function sendDegats(_degats) {
 
     _degatsMessageJson = '{ "degats" : "' + _degats + '" }';
     //TODO envoyer le message de degats
+}
+
+function sendPlayerInformation(){
+    var socket = io();
+    socket.emit('updatePlayerPosition', player.toJson());
 }
 
 function receiveDegats(jsonString) {
