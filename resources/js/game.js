@@ -49,7 +49,7 @@ function drawShip() {
     //Affichage Text Ennemy
     ctx.font = "15px ARIAL";
     ctx.fillStyle = "black";
-    ctx.fillText("ENNEMY", barVieEnnemyX, 15);
+    ctx.fillText(ennemy.name, barVieEnnemyX, 15);
 
     //Barre de vie du Player
     ctx.fillStyle = "red";
@@ -415,16 +415,24 @@ var currentPlayerName = "PLAYER";
 function createPlayers(){
     var playerNumber =  getCurrentPlayer();
     currentPlayerName = localStorage.getItem("user");
+    var ennemyName = getEnnemyName();
 
     if (playerNumber === 1) {
         isPlayerReverse = false;
         player = StickmanModel(currentPlayerName, (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
-        ennemy = StickmanModel('', (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
+        ennemy = StickmanModel(ennemyName, (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
     } else if (playerNumber === 2){
         isPlayerReverse = true;
-        ennemy = StickmanModel('', (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, true);
+        ennemy = StickmanModel(ennemyName, (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, true);
         player = StickmanModel(currentPlayerName, (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, false);
     }
+}
+
+function getEnnemyName(){
+    playersOnline.forEach(function(obj, index, array){
+        if(obj.username != currentPlayerName) return obj.username;
+    });
+    return "";
 }
 
 
