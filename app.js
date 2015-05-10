@@ -251,7 +251,6 @@ io.on('connection', function(socket)
 
         socket.on('sendDegats', function(degatsJsonString){
            io.emit('ioSendDegats', degatsJsonString);
-            console.log(degatsJsonString);
         });
 
 

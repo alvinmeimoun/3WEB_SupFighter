@@ -99,12 +99,8 @@ function drawShip() {
     player.draw(ctx);
     ennemy.draw(ctx);
 
-    var collision = false;
-    if(!isPlayerReverse){
-        collision = isInCollision(player, ennemy);
-    } else {
-        collision = isInCollision(ennemy, player);
-    }
+    var collision = isInCollision();
+
 
     //Check damage upper
     if (!damageHandledUpper && collision && uppercutKey && ennemy.life >= 0 ) {
@@ -143,6 +139,8 @@ function loop() {
 
     //Envoi mise à jour position joueur
     if(player != null) sendPlayerInformation();
+
+    console.log(isInCollision());
 }
 
 function keyDown(e) {
@@ -488,20 +486,28 @@ var socket = io();
 
 }
 
-function isInCollision(playerA, playerB) {
+function isInCollision() {
     //return playerA.x < playerB.x + (playerB.width / 2) &&
     //    playerA.x + playerA.width / 2 > playerB.x &&
     //    playerA.y < playerB.y + playerB.height - 65 &&
     //    playerA.y + playerA.height > playerB.y + 65;
 
-    return false;
+    //ABCD correspondent aux 4 angles du player dans l'ordre d'une montre en partant du haut gauche
+    //EFGH correspondent aux 4 angles de l'ennemi dans l'ordre d'une montre en partant du haut gauche
+    var __xA = player.srcX + player.x, __xB = player.srcX + player.x + player.width,
+        __xE = ennemy.srcX + ennemy.x, __xF = ennemy.srcX + ennemy.x + ennemy.width;
+    var __yA = player.srcY + player.y, __yD = player.srcY + player.y + player.height,
+        __yE = ennemy.srcY + ennemy.y, __yH = ennemy.srcY + ennemy.y + ennemy.height;
+
+    return ((__xA >= __xE && __xA <= __xF) || (__xB <= __xF && __xB >= __xE));
+        //&& ((__yA >= __yE && __yA <= __yH) || (__yD <= __yH && __yD >= __yE));
 }
 
 function sendDegats(_degats) {
     ennemy.life -= _degats;
 
 
-    var __degatsMessageJson = '{ "degats" : "' + _degats + '"' +
+    var __degatsMessageJson = '{ "degats" : ' + _degats + '' +
         ', "causedBy" : "' + player.name + '"' +
         ', "infligeTo" : "'+ennemy.name+'" }';
 

@@ -27,14 +27,14 @@ function StickmanModel(_name,_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnem
         toJson: function(){
             return '{ ' +
                     '"name": "' + this.name +'"'+
-                ',"x": "'+ this.x + '"' +
-                ',"y": "'+ + this.y + '"' +
-                ',"width": "'+ + this.width + '"' +
-                ',"height": "'+ + this.height + '"' +
+                ',"x": '+ this.x + '' +
+                ',"y": '+ + this.y + '' +
+                ',"width": '+ + this.width + '' +
+                ',"height": '+ + this.height + '' +
                 ',"imageKey": "'+ this.imageKey + '"' +
-                ',"srcX": "'+ + this.srcX + '"' +
-                ',"srcY": "'+ + this.srcY + '"' +
-                ',"life": "'+ + this.life + '"' +
+                ',"srcX": '+ + this.srcX + '' +
+                ',"srcY": '+ + this.srcY + '' +
+                ',"life": '+ + this.life + '' +
                 ' }';
         },
 
