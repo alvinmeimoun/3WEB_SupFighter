@@ -494,8 +494,8 @@ function isInCollision() {
 
     //ABCD correspondent aux 4 angles du player dans l'ordre d'une montre en partant du haut gauche
     //EFGH correspondent aux 4 angles de l'ennemi dans l'ordre d'une montre en partant du haut gauche
-    var __xA = player.srcX + player.x, __xB = player.srcX + player.x + player.width,
-        __xE = ennemy.srcX + ennemy.x, __xF = ennemy.srcX + ennemy.x + ennemy.width;
+    var __xA =  player.x, __xB =  player.x + player.width,
+        __xE =  ennemy.x, __xF =  ennemy.x + ennemy.width;
     var __yA = player.srcY + player.y, __yD = player.srcY + player.y + player.height,
         __yE = ennemy.srcY + ennemy.y, __yH = ennemy.srcY + ennemy.y + ennemy.height;
 
