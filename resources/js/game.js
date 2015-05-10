@@ -16,8 +16,6 @@ var canvas, ctx, player, ennemy,
     crouchBlock = false,
     upKey = false,
     downKey = false,
-    player1 = "",
-    player2 = "",
     playersOnline = [];
 
 var damageHandledUpper = false, damageHandlerKick = false;
@@ -109,8 +107,6 @@ function drawShip() {
             sendDegats(DAMAGE_UPPER);
             damageHandledUpper = true;
         }
-
-        console.log(ennemy.life);
     }
     //Check damage kick + vie supérieur à 0
     if (!damageHandlerKick && collision && kickKey && ennemy.life > 0) {
@@ -120,8 +116,6 @@ function drawShip() {
             damageHandlerKick = true;
 
         }
-
-        console.log(ennemy.life);
     }
 
     //On reset l'état des handler damage
@@ -139,8 +133,6 @@ function loop() {
 
     //Envoi mise à jour position joueur
     if(player != null) sendPlayerInformation();
-
-    console.log(isInCollision());
 }
 
 function keyDown(e) {
@@ -312,9 +304,6 @@ function keyDown(e) {
         }
     }
 
-
-    ////Envoi mise à jour position joueur
-    //sendPlayerInformation();
 }
 
 function keyUp(e) {
@@ -391,9 +380,6 @@ function keyUp(e) {
         }
 
     }
-    //
-    ////Envoi mise à jour position joueur
-    //sendPlayerInformation();
 }
 
 function launchGame() {
@@ -403,10 +389,6 @@ function launchGame() {
     setInterval(loop, 1000 / 30);
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
-    //console.log("Launch GAME");
-
-
-    //console.log('local storage ' + localStorage.getItem("user"));
 
     var socket = io();
     socket.emit('get Players');
@@ -487,20 +469,19 @@ var socket = io();
 }
 
 function isInCollision() {
-    //return playerA.x < playerB.x + (playerB.width / 2) &&
-    //    playerA.x + playerA.width / 2 > playerB.x &&
-    //    playerA.y < playerB.y + playerB.height - 65 &&
-    //    playerA.y + playerA.height > playerB.y + 65;
-
     //ABCD correspondent aux 4 angles du player dans l'ordre d'une montre en partant du haut gauche
     //EFGH correspondent aux 4 angles de l'ennemi dans l'ordre d'une montre en partant du haut gauche
-    var __xA =  player.x, __xB =  player.x + player.width,
-        __xE =  ennemy.x, __xF =  ennemy.x + ennemy.width;
-    var __yA = player.srcY + player.y, __yD = player.srcY + player.y + player.height,
-        __yE = ennemy.srcY + ennemy.y, __yH = ennemy.srcY + ennemy.y + ennemy.height;
+    var __xA = player.x, __xB = player.x + player.width,
+        __xE = ennemy.x, __xF = ennemy.x + ennemy.width;
+    var __yA = player.y, __yD = player.y + player.height,
+        __yE = ennemy.y, __yH = ennemy.y + ennemy.height;
 
-    return ((__xA >= __xE && __xA <= __xF) || (__xB <= __xF && __xB >= __xE));
-        //&& ((__yA >= __yE && __yA <= __yH) || (__yD <= __yH && __yD >= __yE));
+    //Adjustements liés aux espaces blancs des images
+    __xA += 10; __xB -=10; __xE += 10; __xF -= 10;
+    __yA += 65; __yE += 65;
+
+    return ((__xA >= __xE && __xA <= __xF) || (__xB <= __xF && __xB >= __xE))
+        && ((__yA >= __yE && __yA <= __yH) || (__yD <= __yH && __yD >= __yE));
 }
 
 function sendDegats(_degats) {
