@@ -31,13 +31,13 @@
         </div>
     </script>
     <div id="chat">
-        <ul id="messages">
-
+        <ul id="messages" ng-repeat="message in messagesList">
+        <li >{{ message.text }}</li>
 
         </ul>
-        <form id="chat_form" action="">
-            <input id="m" autocomplete="off"/> <button>SEND</button>
-        </form>
+       <form id="chat_form" action="" data-ng-submit="" role="form">
+            <input id="m" ng-model="msg" autocomplete="off"/> <button type="button" ng-click="sendMessage()" >SEND</button>
+       </form>
     </div>
     <script>
 

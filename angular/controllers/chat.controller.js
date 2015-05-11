@@ -16,20 +16,67 @@ angular.module('chat.controller', [
     .controller("chatCtrl", function($scope, $http, $location, AuthenticationService,mySocket, $modal ) {
 
         // On set l'username dans le local storage pour son utilisation dans le chat
-        localStorage.setItem("user",AuthenticationService.GetCredentials().currentUser.username);
+        var username = AuthenticationService.GetCredentials().currentUser.username;
         var socket = io();
-        socket.emit('listenToResponse');
+        var messages = [];
+        socket.emit('login' , AuthenticationService.GetCredentials().currentUser);
+        localStorage.setItem("user", username);
 
+        // Fonction permettant d'envoyer un message vià le chat
+        $scope.sendMessage = function(){
+            // Concaténation des messages avec l'username
+            $scope.completedMessage =   username +  ' - ' + $scope.msg;
+            // Emission de notre event socket IO pour envoyer notre message
+            socket.emit('chat message', $scope.completedMessage );
+            $scope.msg = "";
+
+            if (socket)
+            {
+
+                if(window.localStorage)
+                {
+                    if(localStorage.getItem("messages"))
+                    {
+                        console.log("local storage items : " + typeof(localStorage.getItem("messages")));
+                      var  msgs = localStorage.getItem("messages");
+
+                        $scope.messagesList = msgs;
+                      // $scope.messages.(item);
+
+                    }
+                }
+                socket.on('chat message', function(msg)
+                {
+                    console.log(msg);
+                    if (messages.length !== 0)
+                    {
+                        if(messages[messages.length - 1].text !== msg){
+                            messages.push({ text: msg});
+                            $scope.messagesList = messages;
+                        }
+                    }
+                    else
+                    {
+                        messages.push({ text: msg});
+                        $scope.messagesList = messages;
+                    }
+                });
+            }
+        };
+
+        // Event socket IO pour écouter les propositions d'invitations.
+        socket.emit('listenToResponse');
         socket.on('listenToResponse', function(invite){
             //console.log(invite.count);
 
-            if(typeof(invite)  !== "undefined" || invite !== null )
+            if(typeof(invite)  !== "undefined" || typeof(invite) !== null )
             {
                 console.log("invite" + invite.fromUser.username + " " + AuthenticationService.GetCredentials().currentUser.username );
 
                 if (invite.fromUser.username === AuthenticationService.GetCredentials().currentUser.username || invite.ToUser.username === AuthenticationService.GetCredentials().currentUser.username )
                 {
                     console.log("response to invite , game coming soom wait " + JSON.stringify(invite.response));
+
                     if(invite.response === "accepted")
                     {
                         $scope.response = true;
@@ -38,9 +85,6 @@ angular.module('chat.controller', [
                     {
                         $scope.response = false;
                     }
-
-
-                    console.log($scope.response);
                     $scope.items = [invite.fromUser.username, invite.ToUser.username];
                     $scope.animationsEnabled = true;
                     $modal.open({
@@ -91,96 +135,6 @@ angular.module('chat.controller', [
         templateUrl: '/angular/views/chat.html',
        link: function(scope, elem, attrs ) {
 
-            var username = "";
-            var completedMessage;
-            var messages = [];
-            var socket;
-            try
-            {
-                socket = io();
-                console.log("socket is ok");
-
-            }
-            catch (e)
-            {
-                e.message();
-            }
-           socket.emit('login' , AuthenticationService.GetCredentials().currentUser);
-           // console.log(localStorage.getItem("user"));
-            if(!localStorage.getItem("user"))
-            {
-                //$('#login_div').show();
-                $('#chat').hide();
-                $('#login').submit(function(e)
-                 {
-                 // permet eviter le rechargement de la page
-                 e.preventDefault();
-                 username = $('#username').val();
-                 $('#login_div').hide();
-                 $('#chat').show();
-                 localStorage.setItem("user", username);
-                 });
-           }
-
-            else
-            {
-                username = localStorage.getItem("user");
-                console.log("user" + localStorage.getItem("user"));
-                $('#login_div').hide();
-                $('#chat').show();
-                $('#chat_form').submit(function(e)
-                {
-                    e.preventDefault();
-                    completedMessage =   username +  ' - ' + $('#m').val();
-                    messages.push(completedMessage);
-                    // console.log(completedMessage);
-                    if(window.localStorage)
-                    {
-                        if(localStorage.getItem("messages"))
-                        {
-                            var temp = localStorage.getItem("messages") ;
-                            // temp.push(completedMessage);
-                            //localStorage.removeItem("messages");
-
-                            localStorage.setItem("messages", temp);
-                        }
-                        else
-                        {
-                            localStorage.setItem("messages", messages);
-                        }
-
-                    }
-                    console.log("local storage :" + messages);
-                    socket.emit('chat message', completedMessage );
-                    $('#m').val('');
-                    return false;
-                });
-                if (socket)
-                {
-                    console.log(socket);
-                    if(window.localStorage)
-                    {
-                        if(!localStorage.getItem("messages"))
-                        {
-                            console.log("local storage items : " + localStorage.getItem("messages"));
-
-                            localStorage.getItem("messages").forEach(function(item)
-                            {
-
-                                $('#messages').append($('<li>').text(item));
-                            });
-                        }
-                    }
-                    socket.on('chat message', function(msg)
-                    {
-                        $('#messages').append($('<li>').text(msg));
-                    });
-                }
-                else
-                {
-
-                }
-            }
 
         }
 
