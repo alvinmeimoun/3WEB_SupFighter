@@ -39,9 +39,12 @@ db.once('open', function() {
 var clients = [];
 var listOfInvitations = [];
 var states = ['Invite','Send'];
+var players = [];
+var number = 0;
 io.on('connection', function(socket)
 {
     console.log('Anonym connection');
+
 
     socket.on('login', function(client)
     {
@@ -55,6 +58,8 @@ io.on('connection', function(socket)
             console.log(entry);
         });
         io.emit('login', clients);
+
+
 
 
     socket.on('logout', function(username)
@@ -83,6 +88,7 @@ io.on('connection', function(socket)
                clients.splice(clients.indexOf(client), 1);
            }
         });
+
 
        // console.log(clients);
 
@@ -146,6 +152,7 @@ io.on('connection', function(socket)
 
 
     });
+
     socket.on('listenToResponse', function(invite)
     {
         console.log("listen to response");
@@ -168,6 +175,7 @@ io.on('connection', function(socket)
         io.emit('listenToResponse', invite);
 
     });
+
     socket.on('RemoveInvitation',function(invite){
         listOfInvitations.forEach(function(item)
         {
@@ -186,6 +194,66 @@ io.on('connection', function(socket)
         io.emit('RemoveInvitation');
 
     });
+    // socket concernant le jeu
+        socket.on('add Player', function(player){
+            //console.log("player " + players[0]);
+            console.log("Add player " + player.username);
+            if (players.length == 0)
+            {
+                player.number = 1;
+                players.push(player);
+            }
+            else {
+                players.forEach(function(item)
+                {
+                   if(player.username  !== item.username )
+                   {
+                       player.number = 2;
+                       players.push(player);
+                       console.log("list joueurs " + item);
+                   }
+                });
+            }
+
+            io.emit('add Player', players);
+
+        });
+        socket.on('get Players', function(gettingPlayers){
+            //console.log("player " + players[0]);
+          //  console.log("player " + player[0]);
+            //players = player[0];
+            if (gettingPlayers !== players){
+
+                io.emit('get Players', players);
+            }
+
+
+        });
+        socket.on('get Current Player', function(currentPlayer){
+            //console.log("player " + players[0]);
+            //  console.log("player " + player[0]);
+            //players = player[0];
+            //var currentPlayer;
+            players.forEach(function(item){
+                if(item.username === currentPlayer)
+                {
+                    currentPlayer = item;
+                    console.log("current player " + item.username + " player : " + item.number);
+                    var number = item.number;
+                    io.emit('current Player', number );
+                }
+            });
+        });
+
+        socket.on('updatePlayerPosition', function(playerJsonString){
+            io.emit("iUpdatePlayerPosition", playerJsonString);
+        });
+
+        socket.on('sendDegats', function(degatsJsonString){
+           io.emit('ioSendDegats', degatsJsonString);
+        });
+
+
 });
 });
 // Server Side

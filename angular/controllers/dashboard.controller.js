@@ -22,11 +22,9 @@ angular.module('dashboard.controller', [
         {
             $location.path('/');
         }
-       // var socket = io();
+
         var goToGame = false;
         var modalInstance = "";
-
-
 
 
     });

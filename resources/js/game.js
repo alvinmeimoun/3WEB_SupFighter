@@ -15,7 +15,8 @@ var canvas, ctx, player, ennemy,
     blockKey = false,
     crouchBlock = false,
     upKey = false,
-    downKey = false;
+    downKey = false,
+    playersOnline = [];
 
 var damageHandledUpper = false, damageHandlerKick = false;
 
@@ -24,20 +25,41 @@ function clearCanvas() {
 }
 
 function drawShip() {
+    //Creation des players si non deja crées
+    if(player === undefined) createPlayers();
 
-    //Affichage Text Player1
+
+    //BARRES DE VIE
+    var barViePlayerX;
+    var barVieEnnemyX;
+
+    if(!isPlayerReverse){
+        barVieEnnemyX = 350;
+        barViePlayerX = 10;
+    } else {
+        barVieEnnemyX = 10;
+        barViePlayerX = 350;
+    }
+
+    //Affichage Text Player
     ctx.font = "15px ARIAL";
     ctx.fillStyle = "black";
-    ctx.fillText("PLAYER 1", 10, 15);
+    ctx.fillText(currentPlayerName, barViePlayerX, 15);
 
-    //Affichage Text Player2
+    //Affichage Text Ennemy
     ctx.font = "15px ARIAL";
     ctx.fillStyle = "black";
-    ctx.fillText("PLAYER 2", 350, 15);
+    ctx.fillText(ennemy.name, barVieEnnemyX, 15);
 
     //Barre de vie du Player
     ctx.fillStyle = "red";
-    ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
+    if(isPlayerReverse){
+        ctx.fillRect(10, 25, (ennemy.life / 100) * 140, 25);
+    } else {
+        ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
+    }
+
+
 
     //Bordure de la barre de vie du Player
     ctx.strokeStyle = "black";
@@ -46,7 +68,13 @@ function drawShip() {
 
     //Barre de vie de l'ennemy
     ctx.fillStyle = "#FF0000";
-    ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
+    if(isPlayerReverse){
+        ctx.fillRect(350, 25, (player.life / 100) * 140, 25);
+    } else {
+        ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
+    }
+
+
 
     //Bordure de la barre de vie de l'ennemy
     ctx.strokeStyle = "black";
@@ -54,21 +82,23 @@ function drawShip() {
     ctx.strokeRect(350, 25, 140, 25);
 
     if (rightKey) {
-        if (player.x + 5 <= width - player.width) {
-            player.x += 5;
-            player.srcX = 83;
-        }
+            if (player.x + 5 <= width - player.width) {
+                player.x += 5;
+                player.srcX = 83;
+            }
+
     } else if (leftKey) {
-        if (player.x - 5 >= -10) {
-            player.x -= 5;
-            player.srcX = 156;
+            if (player.x - 5 >= -10) {
+                player.x -= 5;
+                player.srcX = 156;
+            }
         }
-    }
 
     player.draw(ctx);
     ennemy.draw(ctx);
 
-    var collision = isInCollision(player, ennemy);
+    var collision = isInCollision();
+
 
     //Check damage upper
     if (!damageHandledUpper && collision && uppercutKey && ennemy.life >= 0 ) {
@@ -77,8 +107,6 @@ function drawShip() {
             sendDegats(DAMAGE_UPPER);
             damageHandledUpper = true;
         }
-
-        console.log(ennemy.life);
     }
     //Check damage kick + vie supérieur à 0
     if (!damageHandlerKick && collision && kickKey && ennemy.life > 0) {
@@ -88,8 +116,6 @@ function drawShip() {
             damageHandlerKick = true;
 
         }
-
-        console.log(ennemy.life);
     }
 
     //On reset l'état des handler damage
@@ -104,6 +130,9 @@ function drawShip() {
 function loop() {
     clearCanvas();
     drawShip();
+
+    //Envoi mise à jour position joueur
+    if(player != null) sendPlayerInformation();
 }
 
 function keyDown(e) {
@@ -274,6 +303,7 @@ function keyDown(e) {
             player.x -= 0;
         }
     }
+
 }
 
 function keyUp(e) {
@@ -356,32 +386,134 @@ function launchGame() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    player = StickmanModel((width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
-    ennemy = StickmanModel((width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
-
     setInterval(loop, 1000 / 30);
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
-    console.log("Launch GAME");
+
+    var socket = io();
+    socket.emit('get Players');
+    socket.on('get Players', function(players){
+        //console.log('recept '+ players);
+        playersOnline = players;
+    });
+
+    //Broadcast listener
+    socket.on('iUpdatePlayerPosition', function(playerJsonString){
+        var objFromJson = JSON.parse(playerJsonString);
+        if(objFromJson.name !== currentPlayerName){
+            ennemy.updateFromJson(playerJsonString);
+        }
+    });
+
+    socket.on('ioSendDegats', function(degatsJsonString){
+        receiveDegats(degatsJsonString);
+    });
+}
+
+var isPlayerReverse = false;
+var currentPlayerName = "PLAYER";
+function createPlayers(){
+    var playerNumber =  getCurrentPlayer();
+    currentPlayerName = localStorage.getItem("user");
+    var ennemyName = getEnnemyName();
+
+    if (playerNumber === 1) {
+        isPlayerReverse = false;
+        player = StickmanModel(currentPlayerName, (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
+        ennemy = StickmanModel(ennemyName, (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
+    } else if (playerNumber === 2){
+        isPlayerReverse = true;
+        ennemy = StickmanModel(ennemyName, (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, true);
+        player = StickmanModel(currentPlayerName, (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, false);
+    }
+}
+
+function getEnnemyName(){
+    playersOnline.forEach(function(obj, index, array){
+        if(obj.username != currentPlayerName) return obj.username;
+    });
+    return "";
+}
+
+
+var playerNumber;
+function getCurrentPlayer(){
+
+var socket = io();
+    var currentPlayer = localStorage.getItem("user");
+    socket.emit('get Current Player', currentPlayer );
+    socket.on('current Player', function(number){
+        //console.log('recept '+ players);
+       playerNumber = number;
+
+    });
+    return playerNumber;
+    /*playersOnline.forEach(function(item)
+    {
+        switch (item.number){
+            case 1 : playerNumber = item.number;
+                break;
+            case 2 : playerNumber = item.number;
+                break;
+        }
+        return playerNumber;
+
+
+       /* if(item.username === localStorage.getItem("user") && item.number === 1)
+        {
+            //console.log(" current player 1 " + item.username);
+            playerNumber = item.number;
+            return playerNumber;
+
+        }
+        if(item.username === localStorage.getItem("user") && item.number === 2)
+        {
+            playerNumber = item.number;
+            //console.log(" current player 2" + item.username);
+            return playerNumber;
+        }*/
+    //});
 
 }
 
-function isInCollision(playerA, playerB) {
-    return playerA.x < playerB.x + (playerB.width / 2) &&
-        playerA.x + playerA.width / 2 > playerB.x &&
-        playerA.y < playerB.y + playerB.height - 65 &&
-        playerA.y + playerA.height > playerB.y + 65;
+function isInCollision() {
+    //ABCD correspondent aux 4 angles du player dans l'ordre d'une montre en partant du haut gauche
+    //EFGH correspondent aux 4 angles de l'ennemi dans l'ordre d'une montre en partant du haut gauche
+    var __xA = player.x, __xB = player.x + player.width,
+        __xE = ennemy.x, __xF = ennemy.x + ennemy.width;
+    var __yA = player.y, __yD = player.y + player.height,
+        __yE = ennemy.y, __yH = ennemy.y + ennemy.height;
+
+    //Adjustements liés aux espaces blancs des images
+    __xA += 10; __xB -=10; __xE += 10; __xF -= 10;
+    __yA += 65; __yE += 65;
+
+    return ((__xA >= __xE && __xA <= __xF) || (__xB <= __xF && __xB >= __xE))
+        && ((__yA >= __yE && __yA <= __yH) || (__yD <= __yH && __yD >= __yE));
 }
 
 function sendDegats(_degats) {
     ennemy.life -= _degats;
 
 
-    _degatsMessageJson = '{ "degats" : "' + _degats + '" }';
-    //TODO envoyer le message de degats
+    var __degatsMessageJson = '{ "degats" : ' + _degats + '' +
+        ', "causedBy" : "' + player.name + '"' +
+        ', "infligeTo" : "'+ennemy.name+'" }';
+
+    var socket = io();
+    socket.emit('sendDegats', __degatsMessageJson);
+}
+
+function sendPlayerInformation(){
+    var socket = io();
+    socket.emit('updatePlayerPosition', player.toJson());
 }
 
 function receiveDegats(jsonString) {
     var objFromJson = JSON.parse(jsonString);
-    player.life -= objFromJson.degats;
+    if(objFromJson.causedBy !== currentPlayerName){
+        player.life -= objFromJson.degats;
+    }
+
+
 }

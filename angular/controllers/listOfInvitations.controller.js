@@ -18,6 +18,9 @@ angular.module('listOfInvitations.controller', [
         var invitationsList = [];
         $scope.hadList = false;
         // Nous envoyons une requête au serveur pour récupérer la liste des invitations
+
+        //var socket = io();
+
         socket.emit('sendInvite');
         socket.on('sendInvite', function(invite){
 

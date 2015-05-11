@@ -5,10 +5,11 @@ var STICKMAN_CROUCH = "KEY_STICKMAN_CROUCH";
 var STICKMAN_CROUCH_BLOCK = "KEY_STICKMAN_CROUCH_BLOCK";
 var STICKMAN_BLOCK = "KEY_STICKMAN_BLOCK";
 
-function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnemy) {
+function StickmanModel(_name,_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnemy) {
     var player = {
         x: _x,
         y: _y,
+        name: _name,
         width: _width,
         height: _height,
         imageKey: _imageKey,
@@ -25,14 +26,15 @@ function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnemy) {
 
         toJson: function(){
             return '{ ' +
-                '"x": "'+ this.x + '"' +
-                ',"y": "'+ + this.y + '"' +
-                ',"width": "'+ + this.width + '"' +
-                ',"height": "'+ + this.height + '"' +
+                    '"name": "' + this.name +'"'+
+                ',"x": '+ this.x + '' +
+                ',"y": '+ + this.y + '' +
+                ',"width": '+ + this.width + '' +
+                ',"height": '+ + this.height + '' +
                 ',"imageKey": "'+ this.imageKey + '"' +
-                ',"srcX": "'+ + this.srcX + '"' +
-                ',"srcY": "'+ + this.srcY + '"' +
-                ',"life": "'+ + this.life + '"' +
+                ',"srcX": '+ + this.srcX + '' +
+                ',"srcY": '+ + this.srcY + '' +
+                ',"life": '+ + this.life + '' +
                 ' }';
         },
 
@@ -47,6 +49,7 @@ function StickmanModel(_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnemy) {
             this.srcX = objFromJson.srcX;
             this.srcY = objFromJson.srcY;
             this.life = objFromJson.life;
+            this.name = objFromJson.name;
         }
     };
 
