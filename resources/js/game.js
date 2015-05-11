@@ -513,6 +513,14 @@ function receiveDegats(jsonString) {
     var objFromJson = JSON.parse(jsonString);
     if(objFromJson.causedBy !== currentPlayerName){
         player.life -= objFromJson.degats;
+        console.log(player.life);
+        if(player.life === 0){
+
+            console.log(" player " + objFromJson.causedBy + " win ");
+            var sendedResult = {winnerUser: objFromJson.causedBy , looserUser: currentPlayerName};
+            var socket = io();
+            socket.emit('sendResult', sendedResult );
+        }
     }
 
 

@@ -218,6 +218,7 @@ io.on('connection', function(socket)
             io.emit('add Player', players);
 
         });
+        // recupération des joueurs
         socket.on('get Players', function(gettingPlayers){
             //console.log("player " + players[0]);
           //  console.log("player " + player[0]);
@@ -229,11 +230,9 @@ io.on('connection', function(socket)
 
 
         });
+        // récupération du joueur actuel
         socket.on('get Current Player', function(currentPlayer){
-            //console.log("player " + players[0]);
-            //  console.log("player " + player[0]);
-            //players = player[0];
-            //var currentPlayer;
+
             players.forEach(function(item){
                 if(item.username === currentPlayer)
                 {
@@ -252,6 +251,10 @@ io.on('connection', function(socket)
         socket.on('sendDegats', function(degatsJsonString){
            io.emit('ioSendDegats', degatsJsonString);
         });
+        socket.on('sendResult', function(sendedResult){
+            console.log('test' + sendedResult);
+            io.emit('sendResult', sendedResult);
+        })
 
 
 });
@@ -261,13 +264,13 @@ io.on('connection', function(socket)
 router.post('/server/getLadders', Controller.getAllLadder);
 router.post('/server/getUser', Controller.getUser);
 router.post('/server/addUser', Controller.addUser);
-
+router.post('/server/updateLadder', Controller.updateLadder);
 /*router.put('/server/update/:id', Controller.updateCustomer);
 router.delete('/server/delete/:id', Controller.deleteCustomer);*/
 
 // Client Side
 router.get('/', function(req, res) { res.sendFile(__dirname + '/index.html');});
-router.get('/chat', function(req, res) { res.sendFile(__dirname + '/chatPart.html');});
+//router.get('/chat', function(req, res) { res.sendFile(__dirname + '/chatPart.html');});
 
 //app.use('/', express.static(__dirname ));
 app.use('/angular', express.static(__dirname + '/angular'));

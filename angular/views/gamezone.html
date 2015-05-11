@@ -4,4 +4,35 @@
 
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <canvas id="canvas" width="500" height="400" style="display:block; margin:20px auto 0; border:1px dashed #ccc;" ></canvas>
+
+
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title"> Game Notification </h3>
+        </div>
+        <div class="modal-body">
+            <!-- <ul>
+                 <li ng-repeat="item in items">
+                     <a ng-click="selected.item = item">{{ item }}</a>
+                 </li>
+             </ul>
+             Selected: <b>{{ selected.item }}</b>-->
+            <div  ng-if="response">
+                <h3>You win ! </h3>
+                <h4 style="text-align:center;" > {{ items[0] }} VS {{ items[1] }}</h4>
+            </div>
+            <div ng-if="!response">
+                <h3>You Loose !</h3>
+                <h4 style="text-align:center;" > {{ items[0] }} is the winner </h4>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+                <button class="btn btn-primary" ng-click="ok()">Close and Go to the Dashboard</button>
+
+
+            <!--<button class="btn btn-warning" ng-click="cancel()">Cancel</button>-->
+        </div>
+    </script>
 </div>
