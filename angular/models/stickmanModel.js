@@ -58,17 +58,22 @@ function StickmanModel(_name,_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnem
 
 function getStickmanImagePathFromKey(_imageKey, _isEnnemy){
     if(_imageKey == STICKMAN_NORMAL){
-        if(_isEnnemy) return 'resources/pictures/game/stickman_sprite_ennemy.png';
-        else return 'resources/pictures/game/stickman_sprite.png';
+        if(_isEnnemy) return 'resources/pictures/game/ennemy/stickman_sprite_ennemy.png';
+        else return 'resources/pictures/game/player/stickman_sprite.png';
     }  else if (_imageKey == STICKMAN_CROUCH){
-        return 'resources/pictures/game/stickman_sprite_crouch.png';
+        if(_isEnnemy) return 'resources/pictures/game/ennemy/stickman_sprite_crouch_ennemy.png';
+        return 'resources/pictures/game/player/stickman_sprite_crouch.png';
     } else if (_imageKey == STICKMAN_KICK){
-        return 'resources/pictures/game/stickman_sprite_kick.png'
+        if(_isEnnemy) return 'resources/pictures/game/ennemy/stickman_sprite_kick_ennemy.png';
+        return 'resources/pictures/game/player/stickman_sprite_kick.png'
     } else if (_imageKey == STICKMAN_UPPER){
-        return 'resources/pictures/game/stickman_sprite_uppercut.png'
+        if(_isEnnemy) return 'resources/pictures/game/ennemy/stickman_sprite_uppercut_ennemy.png';
+        return 'resources/pictures/game/player/stickman_sprite_uppercut.png'
     } else if (_imageKey == STICKMAN_BLOCK){
-        return 'resources/pictures/game/stickman_sprite_block.png'
+        if(_isEnnemy) return 'resources/pictures/game/ennemy/stickman_sprite_block_ennemy.png';
+        return 'resources/pictures/game/player/stickman_sprite_block.png'
     } else if (_imageKey == STICKMAN_CROUCH_BLOCK){
-        return 'resources/pictures/game/stickman_sprite_crouchBlock.png';
+        if(_isEnnemy) return 'resources/pictures/game/ennemy/stickman_sprite_crouchBlock_ennemy.png';
+        return 'resources/pictures/game/player/stickman_sprite_crouchBlock.png';
     }
 }
