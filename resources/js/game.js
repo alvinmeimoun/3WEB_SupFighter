@@ -101,11 +101,12 @@ function drawShip() {
 
     var collision = isInCollision();
 
+/*
     if (player.life <= 0) {
         player.life = 0;
     } else if (ennemy.life <= 0) {
         ennemy.life = 0;
-    }
+    }*/
 
     //Check damage upper
     if (!damageHandledUpper && collision && uppercutKey && ennemy.life > 0 && player.life > 0) {
@@ -554,6 +555,7 @@ function launchGame() {
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
 
+
     var socket = io();
     socket.emit('get Players');
     socket.on('get Players', function (players) {
@@ -687,7 +689,9 @@ function receiveDegats(jsonString) {
             console.log(" player " + objFromJson.causedBy + " win ");
             var sendedResult = {winnerUser: objFromJson.causedBy , looserUser: currentPlayerName};
             var socket = io();
+
             socket.emit('sendResult', sendedResult );
+
         }
     }
 
