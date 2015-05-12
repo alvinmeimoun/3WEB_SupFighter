@@ -4,6 +4,7 @@ var STICKMAN_KICK = "KEY_STICKMAN_KICK";
 var STICKMAN_CROUCH = "KEY_STICKMAN_CROUCH";
 var STICKMAN_CROUCH_BLOCK = "KEY_STICKMAN_CROUCH_BLOCK";
 var STICKMAN_BLOCK = "KEY_STICKMAN_BLOCK";
+var STICKMAN_FATALITY = "KEY_STICKMAN_FATALITY";
 
 function StickmanModel(_name,_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnemy) {
     var player = {
@@ -75,5 +76,8 @@ function getStickmanImagePathFromKey(_imageKey, _isEnnemy){
     } else if (_imageKey == STICKMAN_CROUCH_BLOCK){
         if(_isEnnemy) return 'resources/pictures/game/ennemy/stickman_sprite_crouchBlock_ennemy.png';
         return 'resources/pictures/game/player/stickman_sprite_crouchBlock.png';
+    } else if (_imageKey == STICKMAN_FATALITY){
+        if (_isEnnemy) return 'resources/pictures/game/ennemy/stickman_sprite_fatality_ennemy.png';
+        return 'resources/pictures/game/player/stickman_sprite_fatality.png';
     }
 }

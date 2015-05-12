@@ -9,16 +9,20 @@ var canvas, ctx, player, ennemy,
     rightKey = false,
     leftKey = false,
     uppercutKey = false,
+    uppercutCDValue = 0,
     kickKey = false,
+    kickCDValue = 0,
     jumpKey = false,
     crouchKey = false,
     blockKey = false,
     crouchBlock = false,
+    fatalityKey = false,
+    fatalityCDValue = 0,
     upKey = false,
     downKey = false,
     playersOnline = [];
 
-var damageHandledUpper = false, damageHandlerKick = false;
+var damageHandledUpper = false, damageHandlerKick = false, damageHandlerFatality;
 
 function clearCanvas() {
     ctx.clearRect(0, 0, width, height);
@@ -26,14 +30,14 @@ function clearCanvas() {
 
 function drawShip() {
     //Creation des players si non deja crées
-    if(player === undefined) createPlayers();
+    if (player === undefined) createPlayers();
 
 
     //BARRES DE VIE
     var barViePlayerX;
     var barVieEnnemyX;
 
-    if(!isPlayerReverse){
+    if (!isPlayerReverse) {
         barVieEnnemyX = 350;
         barViePlayerX = 10;
     } else {
@@ -53,12 +57,11 @@ function drawShip() {
 
     //Barre de vie du Player
     ctx.fillStyle = "red";
-    if(isPlayerReverse){
+    if (isPlayerReverse) {
         ctx.fillRect(10, 25, (ennemy.life / 100) * 140, 25);
     } else {
         ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
     }
-
 
 
     //Bordure de la barre de vie du Player
@@ -68,12 +71,11 @@ function drawShip() {
 
     //Barre de vie de l'ennemy
     ctx.fillStyle = "#FF0000";
-    if(isPlayerReverse){
+    if (isPlayerReverse) {
         ctx.fillRect(350, 25, (player.life / 100) * 140, 25);
     } else {
         ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
     }
-
 
 
     //Bordure de la barre de vie de l'ennemy
@@ -82,40 +84,74 @@ function drawShip() {
     ctx.strokeRect(350, 25, 140, 25);
 
     if (rightKey) {
-            if (player.x + 5 <= width - player.width) {
-                player.x += 5;
-                player.srcX = 83;
-            }
+        if (player.x + 5 <= width - player.width) {
+            player.x += 5;
+            player.srcX = 83;
+        }
 
     } else if (leftKey) {
-            if (player.x - 5 >= -10) {
-                player.x -= 5;
-                player.srcX = 156;
-            }
+        if (player.x - 5 >= -10) {
+            player.x -= 5;
+            player.srcX = 156;
         }
+    }
 
     player.draw(ctx);
     ennemy.draw(ctx);
 
     var collision = isInCollision();
 
+    if (player.life <= 0) {
+        player.life = 0;
+    } else if (ennemy.life <= 0) {
+        ennemy.life = 0;
+    }
 
     //Check damage upper
-    if (!damageHandledUpper && collision && uppercutKey && ennemy.life >= 0 ) {
+    if (!damageHandledUpper && collision && uppercutKey && ennemy.life > 0 && player.life > 0) {
 
         if (ennemy.life > 0 && ennemy.life <= 100) {
             sendDegats(DAMAGE_UPPER);
             damageHandledUpper = true;
         }
+        else if (player.life > 0 && player.life <= 100) {
+            sendDegats(DAMAGE_UPPER);
+            damageHandledUpper = true;
+        }
+
+
     }
+
     //Check damage kick + vie supérieur à 0
-    if (!damageHandlerKick && collision && kickKey && ennemy.life > 0) {
+    if (!damageHandlerKick && collision && kickKey && ennemy.life > 0 && player.life > 0) {
 
         if (ennemy.life > 0 && ennemy.life <= 100) {
             sendDegats(DAMAGE_KICK);
             damageHandlerKick = true;
 
         }
+        if (player.life > 0 && player.life <= 100) {
+            sendDegats(DAMAGE_KICK);
+            damageHandlerKick = true;
+
+        }
+
+    }
+
+    //Check damage fatality + vie supérieur à 0
+    if (!damageHandlerFatality && collision && fatalityKey && ennemy.life > 0 && player.life > 0) {
+
+        if (ennemy.life > 0 && ennemy.life <= 100) {
+            sendDegats(DAMAGE_FATALITY);
+            damageHandlerFatality = true;
+
+        }
+        if (player.life > 0 && player.life <= 100) {
+            sendDegats(DAMAGE_FATALITY);
+            damageHandlerFatality = true;
+
+        }
+
     }
 
     //On reset l'état des handler damage
@@ -125,6 +161,11 @@ function drawShip() {
     if (!kickKey) {
         damageHandlerKick = false;
     }
+    if (!fatalityKey) {
+        damageHandlerFatality = false;
+    }
+
+
 }
 
 function loop() {
@@ -132,8 +173,37 @@ function loop() {
     drawShip();
 
     //Envoi mise à jour position joueur
-    if(player != null) sendPlayerInformation();
+    if (player != null) sendPlayerInformation();
 }
+
+
+var cooldowns = function (target, iMax, step) {
+    //console.log(target + " " + iteration);
+    var x;
+
+    switch (target) {
+        case "uppercut":
+            x = (200 / iMax);
+
+            uppercutCDValue = 200 - (x * (step + 1));
+            break;
+
+        case "kick":
+            x = (200 / iMax);
+
+            kickCDValue = 200 - (x * (step + 1));
+            break;
+
+        case "fatality":
+            x = (200 / iMax);
+
+            fatalityCDValue = 200 - (x * (step + 1));
+            break;
+
+        default:
+            break;
+    }
+};
 
 function keyDown(e) {
 
@@ -164,6 +234,11 @@ function keyDown(e) {
             player.x += 0;
             rightKey = false;
         }
+        //fatality préssée au moment du déplacement == le player s'arrête
+        else if (fatalityKey == true) {
+            player.x += 0;
+            rightKey = false;
+        }
     }
     //Fléche LEFT
     else if (e.keyCode == 37) {
@@ -189,6 +264,12 @@ function keyDown(e) {
             player.x -= 0;
             leftKey = false;
         }
+        //fatality préssée au moment du déplacement == le player s'arrête
+        else if (fatalityKey == true) {
+            player.x -= 0;
+            leftKey = false;
+        }
+
     }
 
     //Touche A UPPERCUT
@@ -203,6 +284,30 @@ function keyDown(e) {
             leftKey = false;
             player.x -= 0;
         }
+
+        /*
+         asyncLoop({
+         length : 100,
+
+         functionToLoop : function(loop, i){
+         setTimeout(function(){
+
+         cooldowns("punch", 100, i);
+
+         player.imageKey = STICKMAN_UPPER;
+
+         loop();
+         },10);
+         },
+
+         callback : function(){
+         uppercutKey = true;
+
+         player.imageKey = STICKMAN_NORMAL;
+         }
+         });
+         */
+
         player.imageKey = STICKMAN_UPPER;
         uppercutKey = true;
     }
@@ -239,6 +344,42 @@ function keyDown(e) {
         }
 
         kickKey = true;
+    }
+
+    //Touche E FATALITY + Augmentation de la largeur pour le sprite Kick + Augmentation de la vitesse
+    else if (e.keyCode == 69) {
+
+        //Touche droite préssée au moment du Kick == Sprite Fatality Droite
+        if (player.srcX == 83) {
+
+            //Width couvre une plus grande zone sur le sprite
+            player.width = 135;
+            player.srcX = 5;
+            player.x += 100;
+            player.imageKey = STICKMAN_FATALITY;
+
+        }
+        //Touche gauche préssée au moment du Kick == Sprite Fatality Gauche
+        else if (player.srcX == 156) {
+
+            player.width = 135;
+            player.srcX = 145;
+            player.x -= 100;
+            player.imageKey = STICKMAN_FATALITY;
+
+        }
+
+        //Touche droite ou gauche pressée au moment du Fatality == le player ne bouge plus
+        if (rightKey == true || leftKey == true) {
+
+            rightKey = false;
+            player.x += 0;
+
+            leftKey = false;
+            player.x -= 0;
+        }
+
+        fatalityKey = true;
     }
 
     //Touche space == JUMP + Augmentation de la valeur du saut
@@ -346,6 +487,29 @@ function keyUp(e) {
         }
 
     }
+    //Touche FATALITY == touche relachée + Affichage sprite de base + Rétablissement de la largeur et de la taille du sprite pris en compte
+    else if (e.keyCode == 69) {
+
+        fatalityKey = false;
+
+        //Taille pour RIGHT
+        if (player.srcX == 5) {
+
+            player.width = 67;
+            player.srcX = 83;
+            player.x += 5;
+            player.imageKey = STICKMAN_NORMAL;
+        }
+        //Taille pour LEFT
+        else if (player.srcX == 145) {
+
+            player.width = 67;
+            player.srcX = 156;
+            player.x -= 5;
+            player.imageKey = STICKMAN_NORMAL;
+        }
+
+    }
     //Touche space == touche relachée + Rétablissement de la hauteur de base
     else if (e.keyCode == 32) {
         player.y = height - 200;
@@ -392,28 +556,28 @@ function launchGame() {
 
     var socket = io();
     socket.emit('get Players');
-    socket.on('get Players', function(players){
+    socket.on('get Players', function (players) {
         //console.log('recept '+ players);
         playersOnline = players;
     });
 
     //Broadcast listener
-    socket.on('iUpdatePlayerPosition', function(playerJsonString){
+    socket.on('iUpdatePlayerPosition', function (playerJsonString) {
         var objFromJson = JSON.parse(playerJsonString);
-        if(objFromJson.name !== currentPlayerName){
+        if (objFromJson.name !== currentPlayerName) {
             ennemy.updateFromJson(playerJsonString);
         }
     });
 
-    socket.on('ioSendDegats', function(degatsJsonString){
+    socket.on('ioSendDegats', function (degatsJsonString) {
         receiveDegats(degatsJsonString);
     });
 }
 
 var isPlayerReverse = false;
 var currentPlayerName = "PLAYER";
-function createPlayers(){
-    var playerNumber =  getCurrentPlayer();
+function createPlayers() {
+    var playerNumber = getCurrentPlayer();
     currentPlayerName = localStorage.getItem("user");
     var ennemyName = getEnnemyName();
 
@@ -421,57 +585,57 @@ function createPlayers(){
         isPlayerReverse = false;
         player = StickmanModel(currentPlayerName, (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, false);
         ennemy = StickmanModel(ennemyName, (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, true);
-    } else if (playerNumber === 2){
+    } else if (playerNumber === 2) {
         isPlayerReverse = true;
         ennemy = StickmanModel(ennemyName, (width / 8) - 25, height - 200, 67, 200, 83, 0, STICKMAN_NORMAL, true);
         player = StickmanModel(currentPlayerName, (width / 1) - 100, height - 202, 67, 202, 156, 0, STICKMAN_NORMAL, false);
     }
 }
 
-function getEnnemyName(){
-    playersOnline.forEach(function(obj, index, array){
-        if(obj.username != currentPlayerName) return obj.username;
+function getEnnemyName() {
+    playersOnline.forEach(function (obj, index, array) {
+        if (obj.username != currentPlayerName) return obj.username;
     });
     return "";
 }
 
 
 var playerNumber;
-function getCurrentPlayer(){
+function getCurrentPlayer() {
 
-var socket = io();
+    var socket = io();
     var currentPlayer = localStorage.getItem("user");
-    socket.emit('get Current Player', currentPlayer );
-    socket.on('current Player', function(number){
+    socket.emit('get Current Player', currentPlayer);
+    socket.on('current Player', function (number) {
         //console.log('recept '+ players);
-       playerNumber = number;
+        playerNumber = number;
 
     });
     return playerNumber;
     /*playersOnline.forEach(function(item)
-    {
-        switch (item.number){
-            case 1 : playerNumber = item.number;
-                break;
-            case 2 : playerNumber = item.number;
-                break;
-        }
-        return playerNumber;
+     {
+     switch (item.number){
+     case 1 : playerNumber = item.number;
+     break;
+     case 2 : playerNumber = item.number;
+     break;
+     }
+     return playerNumber;
 
 
-       /* if(item.username === localStorage.getItem("user") && item.number === 1)
-        {
-            //console.log(" current player 1 " + item.username);
-            playerNumber = item.number;
-            return playerNumber;
+     /* if(item.username === localStorage.getItem("user") && item.number === 1)
+     {
+     //console.log(" current player 1 " + item.username);
+     playerNumber = item.number;
+     return playerNumber;
 
-        }
-        if(item.username === localStorage.getItem("user") && item.number === 2)
-        {
-            playerNumber = item.number;
-            //console.log(" current player 2" + item.username);
-            return playerNumber;
-        }*/
+     }
+     if(item.username === localStorage.getItem("user") && item.number === 2)
+     {
+     playerNumber = item.number;
+     //console.log(" current player 2" + item.username);
+     return playerNumber;
+     }*/
     //});
 
 }
@@ -485,8 +649,12 @@ function isInCollision() {
         __yE = ennemy.y, __yH = ennemy.y + ennemy.height;
 
     //Adjustements liés aux espaces blancs des images
-    __xA += 10; __xB -=10; __xE += 10; __xF -= 10;
-    __yA += 65; __yE += 65;
+    __xA += 10;
+    __xB -= 10;
+    __xE += 10;
+    __xF -= 10;
+    __yA += 65;
+    __yE += 65;
 
     return ((__xA >= __xE && __xA <= __xF) || (__xB <= __xF && __xB >= __xE))
         && ((__yA >= __yE && __yA <= __yH) || (__yD <= __yH && __yD >= __yE));
@@ -498,20 +666,20 @@ function sendDegats(_degats) {
 
     var __degatsMessageJson = '{ "degats" : ' + _degats + '' +
         ', "causedBy" : "' + player.name + '"' +
-        ', "infligeTo" : "'+ennemy.name+'" }';
+        ', "infligeTo" : "' + ennemy.name + '" }';
 
     var socket = io();
     socket.emit('sendDegats', __degatsMessageJson);
 }
 
-function sendPlayerInformation(){
+function sendPlayerInformation() {
     var socket = io();
     socket.emit('updatePlayerPosition', player.toJson());
 }
 
 function receiveDegats(jsonString) {
     var objFromJson = JSON.parse(jsonString);
-    if(objFromJson.causedBy !== currentPlayerName){
+    if (objFromJson.causedBy !== currentPlayerName) {
         player.life -= objFromJson.degats;
     }
 
