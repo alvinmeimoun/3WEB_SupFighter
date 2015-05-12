@@ -161,11 +161,19 @@ var Controller = {
             if (err)
                 return Controller.send(500, err.toString(), {}, res);
             if (c == null)
-                return Controller.send(404, 'Not found', {}, res);
+                return Controller.addLadder(req,res);
 
             for (var i in optional_params) {
                 if (req.body[optional_params[i]] !== undefined)
-                    c[optional_params[i]] = req.body[optional_params[i]];
+                if(c[optional_params[i]] == 'wins')
+                {
+                    c[optional_params[i]] += req.body[optional_params[i]];
+                }
+                if(c[optional_params[i]] == 'losses')
+                {
+                    c[optional_params[i]] += req.body[optional_params[i]];
+                }
+                   // c[optional_params[i]] = req.body[optional_params[i]];
             }
 
             console.log("ok");
