@@ -17,6 +17,7 @@ function StickmanModel(_name,_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnem
         srcX: _srcX,
         srcY: _srcY,
         life: 100,
+        score: 0,
         isEnnemy: _isEnnemy,
 
         draw: function(_context) {
@@ -29,13 +30,14 @@ function StickmanModel(_name,_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnem
             return '{ ' +
                     '"name": "' + this.name +'"'+
                 ',"x": '+ this.x + '' +
-                ',"y": '+ + this.y + '' +
-                ',"width": '+ + this.width + '' +
-                ',"height": '+ + this.height + '' +
+                ',"y": ' + this.y + '' +
+                ',"width": ' + this.width + '' +
+                ',"height": ' + this.height + '' +
                 ',"imageKey": "'+ this.imageKey + '"' +
-                ',"srcX": '+ + this.srcX + '' +
-                ',"srcY": '+ + this.srcY + '' +
-                ',"life": '+ + this.life + '' +
+                ',"srcX": ' + this.srcX + '' +
+                ',"srcY": ' + this.srcY + '' +
+                ',"life": ' + this.life + '' +
+                ',"score": ' + this.score + '' +
                 ' }';
         },
 
@@ -50,6 +52,7 @@ function StickmanModel(_name,_x,_y,_width,_height,_srcX,_srcY,_imageKey,_isEnnem
             this.srcX = objFromJson.srcX;
             this.srcY = objFromJson.srcY;
             this.life = objFromJson.life;
+            this.score = objFromJson.score;
             this.name = objFromJson.name;
         }
     };
