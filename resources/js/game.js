@@ -55,12 +55,16 @@ function drawShip() {
     ctx.fillStyle = "black";
     ctx.fillText(ennemy.name, barVieEnnemyX, 15);
 
-    //Barre de vie du Player
-    ctx.fillStyle = "red";
-    if (isPlayerReverse) {
-        ctx.fillRect(10, 25, (ennemy.life / 100) * 140, 25);
+    //Barre de vie gauche
+    var leftLife = 0;
+    if(isPlayerReverse){
+        leftLife = ennemy.life;
     } else {
-        ctx.fillRect(10, 25, (player.life / 100) * 140, 25);
+        leftLife = player.life
+    }
+    if(leftLife > 0){
+        ctx.fillStyle = "red";
+        ctx.fillRect(10, 25, (leftLife / 100) * 140, 25);
     }
 
 
@@ -70,11 +74,15 @@ function drawShip() {
     ctx.strokeRect(10, 25, 140, 25);
 
     //Barre de vie de l'ennemy
-    ctx.fillStyle = "#FF0000";
-    if (isPlayerReverse) {
-        ctx.fillRect(350, 25, (player.life / 100) * 140, 25);
+    var rightLife = 0;
+    if(isPlayerReverse){
+        rightLife = player.life;
     } else {
-        ctx.fillRect(350, 25, (ennemy.life / 100) * 140, 25);
+        rightLife = ennemy.life;
+    }
+    if(rightLife > 0){
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(350, 25, (rightLife / 100) * 140, 25);
     }
 
 
@@ -685,7 +693,7 @@ function receiveDegats(jsonString) {
     if (objFromJson.causedBy !== currentPlayerName) {
         player.life -= objFromJson.degats;
         console.log(player.life);
-        if(player.life === 0){
+        if(player.life <= 0){
 
             console.log(" player " + objFromJson.causedBy + " win ");
             var sendedResult = {winnerUser: objFromJson.causedBy , looserUser: currentPlayerName};
