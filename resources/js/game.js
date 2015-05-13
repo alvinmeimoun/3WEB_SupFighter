@@ -548,6 +548,7 @@ function keyUp(e) {
 }
 
 function launchGame() {
+    player = undefined; ennemy = undefined;
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
