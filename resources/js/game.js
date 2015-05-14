@@ -2,6 +2,7 @@ var DAMAGE_UPPER = 5;
 var DAMAGE_KICK = 10;
 var DAMAGE_PUNCH = 5;
 var DAMAGE_FATALITY = 30;
+//var timeElapsed = (new Date().getSeconds() * 1000) + new Date().getMilliseconds();
 
 var canvas, ctx, player, ennemy,
     width = 500,
@@ -57,12 +58,12 @@ function drawShip() {
 
     //Barre de vie gauche
     var leftLife = 0;
-    if(isPlayerReverse){
+    if (isPlayerReverse) {
         leftLife = ennemy.life;
     } else {
         leftLife = player.life
     }
-    if(leftLife > 0){
+    if (leftLife > 0) {
         ctx.fillStyle = "red";
         ctx.fillRect(10, 25, (leftLife / 100) * 140, 25);
     }
@@ -75,12 +76,12 @@ function drawShip() {
 
     //Barre de vie de l'ennemy
     var rightLife = 0;
-    if(isPlayerReverse){
+    if (isPlayerReverse) {
         rightLife = player.life;
     } else {
         rightLife = ennemy.life;
     }
-    if(rightLife > 0){
+    if (rightLife > 0) {
         ctx.fillStyle = "#FF0000";
         ctx.fillRect(350, 25, (rightLife / 100) * 140, 25);
     }
@@ -109,12 +110,12 @@ function drawShip() {
 
     var collision = isInCollision();
 
-/*
-    if (player.life <= 0) {
-        player.life = 0;
-    } else if (ennemy.life <= 0) {
-        ennemy.life = 0;
-    }*/
+    /*
+     if (player.life <= 0) {
+     player.life = 0;
+     } else if (ennemy.life <= 0) {
+     ennemy.life = 0;
+     }*/
 
     //Check damage upper
     if (!damageHandledUpper && collision && uppercutKey && ennemy.life > 0 && player.life > 0) {
@@ -214,6 +215,31 @@ var cooldowns = function (target, iMax, step) {
     }
 };
 
+    /*
+    function cooldownOver(timeElapsed){
+        var timeNow = (new Date().getSeconds() * 1000) + new Date().getMilliseconds();
+
+        if(timeNow - timeElapsed > 1000)
+        {
+            console.log("It's Okay");
+            console.log("NOW = " + timeNow);
+            console.log("ELASPED = " + timeElapsed);
+            console.log("Calcul Con" + (timeNow - timeElapsed));
+            return true;
+
+        }
+        else{
+            console.log("It's Not OKAY");
+            console.log("NOW = " + timeNow);
+            console.log("Calcul Con" + timeNow - timeElapsed);
+            console.log("ELASPED = " +timeElapsed);
+            return false;
+
+        }
+    }
+*/
+
+
 function keyDown(e) {
 
     //Documentation key
@@ -294,35 +320,54 @@ function keyDown(e) {
             player.x -= 0;
         }
 
-        /*
-         asyncLoop({
-         length : 100,
-
-         functionToLoop : function(loop, i){
-         setTimeout(function(){
-
-         cooldowns("punch", 100, i);
-
-         player.imageKey = STICKMAN_UPPER;
-
-         loop();
-         },10);
-         },
-
-         callback : function(){
-         uppercutKey = true;
-
-         player.imageKey = STICKMAN_NORMAL;
-         }
-         });
-         */
-
         player.imageKey = STICKMAN_UPPER;
         uppercutKey = true;
     }
 
     //Touche Z KICK + Augmentation de la largeur pour le sprite Kick
     else if (e.keyCode == 90) {
+
+        /*
+        if(cooldownOver(timeElapsed)) {
+            setTimeout(function () {
+
+                console.log("In SetTIMEOUT");
+
+                //Touche droite préssée au moment du Kick == Sprite kick Droite
+                if (player.srcX == 83) {
+
+                    //Width couvre une plus grande zone sur le sprite
+                    player.width = 80;
+                    player.srcX = 23;
+                    player.imageKey = STICKMAN_KICK;
+
+                }
+                //Touche gauche préssée au moment du Kick == Sprite kick Gauche
+                else if (player.srcX == 156) {
+
+                    player.width = 92;
+                    player.srcX = 140;
+                    player.imageKey = STICKMAN_KICK;
+
+                }
+
+                kickKey = true;
+
+                //Touche droite ou gauche pressée au moment du KickRight == le player ne bouge plus
+                if (rightKey == true || leftKey == true) {
+
+                    rightKey = false;
+                    player.x += 0;
+
+                    leftKey = false;
+                    player.x -= 0;
+                }
+
+                timeElapsed = (new Date().getSeconds() * 1000) + new Date().getMilliseconds();
+            }, 1000);
+
+        }
+        */
 
         //Touche droite préssée au moment du Kick == Sprite kick Droite
         if (player.srcX == 83) {
@@ -342,6 +387,8 @@ function keyDown(e) {
 
         }
 
+        kickKey = true;
+
         //Touche droite ou gauche pressée au moment du KickRight == le player ne bouge plus
         if (rightKey == true || leftKey == true) {
 
@@ -351,8 +398,6 @@ function keyDown(e) {
             leftKey = false;
             player.x -= 0;
         }
-
-        kickKey = true;
     }
 
     //Touche E FATALITY + Augmentation de la largeur pour le sprite Kick + Augmentation de la vitesse
@@ -556,7 +601,8 @@ function keyUp(e) {
 }
 
 function launchGame() {
-    player = undefined; ennemy = undefined;
+    player = undefined;
+    ennemy = undefined;
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
@@ -693,13 +739,13 @@ function receiveDegats(jsonString) {
     if (objFromJson.causedBy !== currentPlayerName) {
         player.life -= objFromJson.degats;
         console.log(player.life);
-        if(player.life <= 0){
+        if (player.life <= 0) {
 
             console.log(" player " + objFromJson.causedBy + " win ");
-            var sendedResult = {winnerUser: objFromJson.causedBy , looserUser: currentPlayerName};
+            var sendedResult = {winnerUser: objFromJson.causedBy, looserUser: currentPlayerName};
             var socket = io();
 
-            socket.emit('sendResult', sendedResult );
+            socket.emit('sendResult', sendedResult);
 
         }
     }
