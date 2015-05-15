@@ -1,46 +1,23 @@
-/* 0 */
 {
-    "_id" : ObjectId("55432d43d308772c1eb933b4"),
+
 "username" : "test6",
 "password" : "sha1$fe3ddf72$1$2330772fee702f1761a0ac2097b43893b476c24b",
 "__v" : 0
 }
-
-/* 1 */
 {
-"_id" : ObjectId("5543aca8517f282810088d2d"),
+
 "username" : "test8",
 "password" : "sha1$0ef3f04d$1$6d498614dc591671b22e814929bbac1807870032",
 "__v" : 0
 }
-
-/* 2 */
 {
-"_id" : ObjectId("5543b38d82bb14ec1123949e"),
-"username" : "test9",
-"password" : "sha1$bc12be89$1$8afaa50e698766186a4dc10363d11412cd8f09da",
-"__v" : 0
-}
 
-/* 3 */
-{
-"_id" : ObjectId("5543b39982bb14ec1123949f"),
-"username" : "test8",
-"password" : "sha1$45ddf5f8$1$7f902375ba7a51db5d5a3472fdd6d9af2a7f3570",
-"__v" : 0
-}
-
-/* 4 */
-{
-"_id" : ObjectId("555465e596f894281717fc36"),
 "username" : "mel",
 "password" : "sha1$bdb50bd3$1$da0808fd5ef941ebdb16257f221d1142ee1fd26a",
 "__v" : 0
 }
-
-/* 5 */
 {
-"_id" : ObjectId("555466e9d913e3f01e4946e6"),
+
 "username" : "antonin",
 "password" : "sha1$d1d5e390$1$b3ff787414c6775ebe560ea7d51f4ef9028ae0bc",
 "__v" : 0
