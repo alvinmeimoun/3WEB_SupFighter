@@ -24,6 +24,7 @@ var canvas, ctx, player, ennemy,
     playersOnline = [];
 
 var damageHandledUpper = false, damageHandlerKick = false, damageHandlerFatality;
+var socket = io();
 
 function clearCanvas() {
     ctx.clearRect(0, 0, width, height);
@@ -611,7 +612,7 @@ function launchGame() {
     document.addEventListener('keyup', keyUp, false);
 
 
-    var socket = io();
+
     socket.emit('get Players');
     socket.on('get Players', function (players) {
         //console.log('recept '+ players);
@@ -660,7 +661,7 @@ function getEnnemyName() {
 var playerNumber;
 function getCurrentPlayer() {
 
-    var socket = io();
+
     var currentPlayer = localStorage.getItem("user");
     socket.emit('get Current Player', currentPlayer);
     socket.on('current Player', function (number) {
@@ -725,12 +726,12 @@ function sendDegats(_degats) {
         ', "causedBy" : "' + player.name + '"' +
         ', "infligeTo" : "' + ennemy.name + '" }';
 
-    var socket = io();
+
     socket.emit('sendDegats', __degatsMessageJson);
 }
 
 function sendPlayerInformation() {
-    var socket = io();
+
     socket.emit('updatePlayerPosition', player.toJson());
 }
 
@@ -743,7 +744,7 @@ function receiveDegats(jsonString) {
 
             console.log(" player " + objFromJson.causedBy + " win ");
             var sendedResult = {winnerUser: objFromJson.causedBy, looserUser: currentPlayerName};
-            var socket = io();
+
 
             socket.emit('sendResult', sendedResult);
 
