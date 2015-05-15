@@ -1,13 +1,13 @@
 <div ng-controller="connectedCtrl">
 <h2> Connected Users </h2>
-<!--<pre> {{ listOfUsers | json }}</pre>-->
+<pre> {{ listOfUsers | json }}</pre>
     <ul id="listUsersCo" ng-repeat="item in listOfUsers">
        <li>
        <table>
            <tr>
                <td><h5 class="usersConnected"> {{ item.username }}</h5> </td>
                <td>
-                   <button ng-class="{'btn btn-warning': item.state == 'Invite','btn btn-danger':item.state == 'Send'}" ng-disabled="{{ disable }}" ng-model="item" ng-click="sendInvite($index,item)" > {{ item.state }} </button> </td>
+                   <button ng-class="{'btn btn-warning': item.state == 'Invite','btn btn-danger':item.state == 'Send'}" ng-disabled="item.disable" ng-model="item" ng-click="sendInvite($index,item)" > {{ item.state }} </button> </td>
            </tr>
        </table>
        </li>

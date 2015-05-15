@@ -16,13 +16,15 @@ angular.module('connectedUsers.controller', [
 .controller('connectedCtrl', function($scope,$location,$http, AuthenticationService, mySocket)
     {
 
-        var socket = io();
+        //var socket = io();
         //console.log(socket);
         var usersList = [];
         var states = ['Invite','Send'];
         $scope.states = states;
         var invitedUser = null;
         $scope.disable = false;
+
+
         // Nous envoyons une requête au serveur pour récupérer la liste des utilisateurs connectés
         socket.emit('users');
         socket.on('users', function(users){
@@ -38,7 +40,15 @@ angular.module('connectedUsers.controller', [
                             else
                             {
                                 usersList[i] = users[i];
-                                //usersList[i].state = $scope.states[0];
+                                usersList[i].state = users[i].state;
+                                if (users[i].state == $scope.states[0])
+                                {
+                                    usersList[i].disable = false;
+                                }
+                                else
+                                {
+                                    usersList[i].disable = true;
+                                }
                             }
                            // usersList[i].state = $scope.states[0];
                         }
@@ -65,48 +75,42 @@ angular.module('connectedUsers.controller', [
                             }
                             else
                             {
-
-                                if( invitedUser !== null)
-                                {
-                                if( users[i].id === invitedUser.id)
-                                {
-                                    users[i].state = $scope.states[1];
-                                    usersList[i] =  users[i];
-
-                                }
-                                $scope.disable = true;
                                 usersList[i] = users[i];
+                                usersList[i].state = users[i].state;
+                                if (users[i].state == $scope.states[0])
+                                {
+                                    usersList[i].disable = false;
                                 }
                                 else
                                 {
-                                    usersList[i] = users[i];
-                                    $scope.disable = false;
-
+                                    usersList[i].disable = true;
                                 }
-
-                              //  $scope.disabled = false;
-
                             }
 
                         }
                     }
+
                     $scope.listOfUsers = usersList;
                 });
 
             });
-        }, 5000);
+        }, 1000);
 
         // Fonction permettant d'envoyer une invitation à un joueur voulu
         $scope.sendInvite = function(index,item)
         {
-            invitedUser = item;
+            //invitedUser = item;
             console.log(item);
+            var user = item;
+            socket.emit('updateUserState',user);
             var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
             socket.emit('sendInvite',invite);
-            $scope.listOfUsers[index].state = $scope.states[1];
 
-            invitedUser.state = $scope.states[1];
-            $scope.disable = true;
+            $scope.listOfUsers[index].state = $scope.states[1];
+            $scope.listOfUsers[index].disable = true;
+
+           // invitedUser.state = $scope.states[1];
+           // $scope.disable = true;
         }
 
     })

@@ -1,0 +1,35 @@
+<div class="ladder" ng-controller="ladderBoardCtrl">
+    <div class="row">
+        <h1>The Ladder</h1>
+        <p>
+        Sort by:
+        <select ng-model="orderProp">
+            <option value="-wins">Wins</option>
+            <option value="-losses">Losses</option>
+            <option value="-timePlayed">Time Played</option>
+        </select>
+        </p>
+        <p>
+            <label>
+                Recherche: <input type="text" ng-model="query" />
+            </label>
+        </p>
+        <table class="table table-striped">
+            <tr>
+                <th>Username</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Time Played</th>
+
+            </tr>
+            <!-- |orderBy:wins_predicate | orderBy:losses_predicate | orderBy:timePlayed_predicate -->
+            <tr ng-repeat="item in Ladder | limitTo:limitedTo | filter:query:query | orderBy:orderProp ">
+                <td>{{ item.username }}</td>
+                <td>{{ item.wins }}</td>
+                <td>{{ item.losses }}</td>
+                <td>{{ item.timePlayed }}</td>
+
+            </tr>
+        </table>
+    </div>
+</div>

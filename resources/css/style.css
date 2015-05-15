@@ -94,11 +94,19 @@ body { font: 13px Helvetica, Arial; }
     overflow: hidden;
 }
 .col_left{
+
+
+
+}
+.ladder{
+    padding: 20px;
+}
+.invitationsToFight
+{
+    padding: 10px;
     background-color: steelblue;
     border-radius: 0.5em;
     color: #ffffff;
-
-
 }
 .quickFight
 {

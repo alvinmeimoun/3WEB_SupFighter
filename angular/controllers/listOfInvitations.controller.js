@@ -13,7 +13,7 @@ angular.module('listOfInvitations.controller', [
 // Controlleur d'un formulaire de login
     .controller("invitationsCtrl", function($scope, $http, $location , AuthenticationService ) {
         var states = ['Accept', 'Accepted', 'Deny', 'Denied'];
-        var socket = io();
+       // var socket = io();
         //console.log(socket);
         var invitationsList = [];
         $scope.hadList = false;
@@ -32,7 +32,7 @@ angular.module('listOfInvitations.controller', [
                     {
                         if(invitationsList.length != 0)
                         {
-                        // console.log("invitations : " + invitationsList);
+                        console.log("invitations : " + JSON.stringify(invitationsList));
                         invitationsList.forEach(function(item)
                         {
                             if(invite[i].fromUser.username != item.fromUser.username )

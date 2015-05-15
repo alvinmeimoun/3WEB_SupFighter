@@ -5,6 +5,7 @@
  * Time: 19:21
  * To change this template use File | Settings | File Templates.
  */
+var socket = io();
 var myApp = angular.module("MyApp", [
     'ngRoute',
     'ngCookies',

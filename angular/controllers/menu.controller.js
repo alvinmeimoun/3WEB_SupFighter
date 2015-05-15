@@ -33,6 +33,17 @@ angular.module('menu.controller', [
     .controller('menuCtrl', function($scope,$cookieStore, $location, AuthenticationService,toastr, mySocket) {
 
         /*$scope.message = "Waiting 2000ms for update";*/
+        var credentials = AuthenticationService.GetCredentials();
+        if (typeof credentials === 'undefined' )
+        {
+            $scope.nickname = "";
+            $scope.disable = true;
+        }
+        else /*if (credentials.currentUser)*/{
+            $scope.disable = false;
+            $scope.nickname = credentials.currentUser.username;
+
+        }
 
         setInterval(function () {
             $scope.$apply(function () {
@@ -40,9 +51,12 @@ angular.module('menu.controller', [
                 if (typeof credentials === 'undefined' )
                 {
                     $scope.nickname = "";
+                    $scope.disable = true;
                 }
                 else /*if (credentials.currentUser)*/{
+                    $scope.disable = false;
                     $scope.nickname = credentials.currentUser.username;
+
                 }
 
             });
@@ -50,14 +64,16 @@ angular.module('menu.controller', [
 
         $scope.logout = function()
         {
-            var socket = io();
+
 
             socket.emit('logout', $scope.nickname);
+
+            socket.emit('users');
 
             AuthenticationService.ClearCredentials();
 
             $location.path('#/');
-            toastr.info('Vous avez été déconnecté ! A bientôt ! ');
+            toastr.info('You have been disconnected, See you ! ');
             setInterval(function () {
                 $scope.$apply(function () {
                     var credentials = AuthenticationService.GetCredentials();

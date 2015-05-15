@@ -41,6 +41,7 @@ var listOfInvitations = [];
 var states = ['Invite','Send'];
 var players = [];
 var number = 0;
+var count = 0;
 io.on('connection', function(socket)
 {
     console.log('Anonym connection');
@@ -50,13 +51,26 @@ io.on('connection', function(socket)
     {
         console.log('a user connected');
         console.log('list of connected users event : ');
-        clients.push(client);
-
-       // console.log(clients);
         clients.forEach(function(entry) {
-            entry.state = states[0];
-            console.log(entry);
+            if(entry.username == client.username)
+            {
+              console.log("Reconnexion :" + client.username);
+               count++;
+
+
+            }
+
+
         });
+        if (count == 0)
+        {
+            client.state = states[0];
+            clients.push(client);
+        }
+        else
+            count = 0;
+
+
         io.emit('login', clients);
 
 
@@ -116,10 +130,16 @@ io.on('connection', function(socket)
     socket.on('sendInvite', function(invite)
     {
         //console.log('send invite ' + invite);
+
+
         if (typeof(invite) !== 'undefined')
         {
             listOfInvitations.push(invite);
-            console.log("list : " + listOfInvitations);
+           // console.log("list : " + listOfInvitations);
+            listOfInvitations.forEach(function(item)
+            {
+                console.log("list invitations item : " + JSON.stringify(item));
+            });
             io.emit('sendInvite',listOfInvitations);
         }
 
@@ -138,6 +158,8 @@ io.on('connection', function(socket)
             if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
             {
                item.response = invite.response;
+
+
                console.log(invite);
             }
 
@@ -155,13 +177,13 @@ io.on('connection', function(socket)
 
     socket.on('listenToResponse', function(invite)
     {
-        console.log("listen to response");
+
         if(listOfInvitations.length != 0)
         {
             listOfInvitations.forEach(function(item)
             {
                 console.log("listen to response");
-                if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
+                if(item.fromUser.username == invite.fromUser.username && item.ToUser.username == invite.ToUser.username )
                 {
                     item.response = invite.response;
                     //listOfInvitations.splice(item,1);
@@ -175,12 +197,50 @@ io.on('connection', function(socket)
         io.emit('listenToResponse', invite);
 
     });
+        socket.on('updateUserState', function (user){
+            clients.forEach(function(client){
+                if (user.username == client.username )
+                {
+                    if (client.state == states[0]){
+
+                        user.state = states[1];
+                        user.disable = true;
+                        console.log("new user "+  JSON.stringify(user));
+
+                    }
+                    else{
+
+                        user.state = states[0];
+                        user.disable = false;
+                        console.log("new user 2 "+  JSON.stringify(user));
+
+                    }
+
+
+                }
+                else
+                if ((user.username == client.username && client.state == states[1]))
+                {
+
+                }
+
+            });
+            io.emit('updateUserState',user);
+
+        });
 
     socket.on('RemoveInvitation',function(invite){
         listOfInvitations.forEach(function(item)
         {
             console.log("listen to delete");
             if(item.fromUser.id == invite.fromUser.id && item.ToUser.id == invite.ToUser.id )
+            {
+                //item.response = invite.response;
+                listOfInvitations.splice(item,1);
+                // console.log(item.response);
+                console.log("count remove" + listOfInvitations.length);
+            }
+            if(item.fromUser.id == invite.fromUser.id)
             {
                 //item.response = invite.response;
                 listOfInvitations.splice(item,1);
@@ -252,7 +312,11 @@ io.on('connection', function(socket)
            io.emit('ioSendDegats', degatsJsonString);
         });
         socket.on('sendResult', function(sendedResult){
-            console.log('test' + sendedResult);
+            //console.log('test' + sendedResult);
+
+
+                console.log('ITEM ---- ' + JSON.stringify(sendedResult));
+
             io.emit('sendResult', sendedResult);
         })
 
@@ -281,7 +345,7 @@ app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/resources', express.static(__dirname + '/resources'));
 app.use(router);
 //app.listen(8000);
-http.listen(8000,function()
+http.listen(8000 ,function()
 {
     console.log("server on line ! ");
 });

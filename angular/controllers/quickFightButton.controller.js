@@ -19,34 +19,81 @@ angular.module('quickFightButton.controller', [
            //$http.defaults.headers.post["Content-Type"] = "application/json";
            var urlCompleted = serverUrl + '/getLadders';
            var listOfScores = [];
+           var user = {username: AuthenticationService.GetCredentials().currentUser.username , wins: 0, losses:0 };
            $http.post(urlCompleted)
                .success(function(data, status, headers, config) {
                    console.log("success " + data.result);
                    if(data.result !== [])
                       listOfScores = data.result;
+
                    listOfScores.forEach(function(item){
                        console.log(AuthenticationService.GetCredentials().currentUser.username);
-                       var user = {username: AuthenticationService.GetCredentials().currentUser.username , wins: 0, losses:0 };
+
                        if(item.username === AuthenticationService.GetCredentials().currentUser.username)
                        {
                            user = item;
                            console.log('user found ' + user.username);
                        }
+
+
+                   });
+
+                   listOfScores.forEach(function(item){
+
                        if(item.username !== AuthenticationService.GetCredentials().currentUser.username)
                        {
-                           if(item.wins >= user.wins || item.losses <= user.losses)
+
+                           if((item.wins >= user.wins && item.wins <= (user.wins +5)) /*|| (item.wins <= user.wins - 5) /* || item.losses <= user.losses */)
                            {
                                console.log("item " + JSON.stringify(item.username));
 
-                               var socket = io();
+                               // var socket = io();
                                var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
                                socket.emit('sendInvite',invite);
 
+                               return ;
+                           }
+                           else
+                           if((item.losses >= user.losses && item.losses <= (user.losses +5)))
+                           {
+                               var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
+                               socket.emit('sendInvite',invite);
+
+                               return ;
+                           }
+                           else
+                           {
+                               $scope.noUser = "No user found, please invite online user";
                                return;
                            }
+
+                           /*switch (item.wins){
+                               case (user.wins):
+                                   var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
+                                   socket.emit('sendInvite',invite);
+                                   break;
+                               case (user.wins - 1):
+                                   var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
+                                   socket.emit('sendInvite',invite);
+                                   break;
+                               case (user.wins - 2):
+                                   var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
+                                   socket.emit('sendInvite',invite);
+                                   break;
+                               case (user.wins - 3):
+                                   var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
+                                   socket.emit('sendInvite',invite);
+                                   break;
+                               default:
+                                   console.log("no user found");
+                                   break;*/
+
+                               return ;
+                           //}
                        }
 
                    });
+
 
 
                })

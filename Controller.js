@@ -37,7 +37,7 @@ var Controller = {
     },
     getAllLadder: function(req, res) {
         Ladder.find().exec(function(err, c) {
-            console.log("test");
+            //console.log("test");
             if (err)
                 return Controller.send(500, err.toString(), {}, res);
             //console.log(JSON.stringify(c));
@@ -130,7 +130,7 @@ var Controller = {
     addLadder: function(req, res) {
 
 
-        var parse = Controller.required(['username', 'wins' ,'losses', 'time'], 'body', req);
+        var parse = Controller.required(['username', 'wins' ,'losses', 'timePlayed'], 'body', req);
 
         if (parse.error)
             return Controller.send(403, "Missing `" + parse.missing + "` value", {}, res);
@@ -142,7 +142,7 @@ var Controller = {
             username: parse.params.username,
             wins: parse.params.wins,
             losses: parse.params.losses,
-            time: parse.params.time
+            timePlayed: parse.params.timePlayed
         });
 
 
@@ -155,28 +155,21 @@ var Controller = {
         });
     },
     updateLadder: function(req, res) {
-        var optional_params = ['username', 'wins' ,'losses', 'time'];
+        var optional_params = ['username', 'wins' ,'losses', 'timePlayed'];
 
-        Ladder.findOne({ username : req.params.username }, function(err, c) {
+
+        Ladder.findOne({ username : req.body.username }, function(err, c) {
             if (err)
                 return Controller.send(500, err.toString(), {}, res);
             if (c == null)
                 return Controller.addLadder(req,res);
+           // console.log(JSON.stringify(c));
+            if (req.body.wins == 1)
+                c.wins += 1;
 
-            for (var i in optional_params) {
-                if (req.body[optional_params[i]] !== undefined)
-                if(c[optional_params[i]] == 'wins')
-                {
-                    c[optional_params[i]] += req.body[optional_params[i]];
-                }
-                if(c[optional_params[i]] == 'losses')
-                {
-                    c[optional_params[i]] += req.body[optional_params[i]];
-                }
-                   // c[optional_params[i]] = req.body[optional_params[i]];
-            }
+            else
+                c.losses += 1;
 
-            console.log("ok");
 
             c.save(function(err, row) {
                 Controller.send(200, false, row, res);

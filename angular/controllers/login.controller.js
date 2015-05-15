@@ -8,10 +8,12 @@
 var serverUrl = 'http://localhost:8000/server';
 
 angular.module('login.controller', [
-'authentication.service'
+'authentication.service',
+        'socket.service',
+        'toastr'
 ])
 // Controlleur d'un formulaire de login
-.controller("loginCtrl", function($scope, $http, $location, AuthenticationService) {
+.controller("loginCtrl", function($scope, $http, $location, AuthenticationService, mySocket, toastr) {
     $http.defaults.headers.post["Content-Type"] = "application/json";
 
     console.log($http.defaults.headers);
@@ -25,7 +27,12 @@ angular.module('login.controller', [
                 //console.log("success " + data.result);
                 $scope.success = data.result._id + data.result.username;
                 AuthenticationService.SetCredentials(data.result._id, data.result.username);
+
                 $location.path('/dashboard');
+                toastr.success('Welcome to Stick Fighters ! ');
+                //var socket = io();
+                socket.emit('login' , AuthenticationService.GetCredentials().currentUser);
+                socket.emit('users');
             })
             .error(function(data, status, headers, config) {
                 // alert("An error occured: " + data.error);

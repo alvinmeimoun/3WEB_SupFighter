@@ -1,0 +1,39 @@
+/* 0 */
+{
+    "_id" : ObjectId("55524bc00ea135f4141a22c7"),
+    "username" : "test6",
+    "wins" : 8,
+    "losses" : 5,
+    "__v" : 0,
+    "timePlayed" : ""
+}
+
+/* 1 */
+{
+    "_id" : ObjectId("55524bc00ea135f4141a22c8"),
+    "username" : "test8",
+    "wins" : 0,
+    "losses" : 8,
+    "__v" : 0,
+    "timePlayed" : ""
+}
+
+/* 2 */
+{
+    "_id" : ObjectId("5554d559fe1ff60b50d9444b"),
+    "username" : "antonin",
+    "wins" : 12,
+    "losses" : 7,
+    "__v" : 0,
+    "timePlayed" : ""
+}
+
+/* 3 */
+{
+    "_id" : ObjectId("5554d567fe1ff60b50d9444c"),
+    "username" : "mel",
+    "wins" : 0,
+    "losses" : 1,
+    "__v" : 0,
+    "timePlayed" : ""
+}

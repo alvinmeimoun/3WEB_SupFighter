@@ -12,6 +12,7 @@ angular.module('dashboard.controller', [
         'connectedUsers.controller',
         'listOfInvitations.controller',
         'quickFightButton.controller',
+        'ladderBoard.controller',
         'socket.service',
         'ui.bootstrap'
     ])
@@ -25,6 +26,8 @@ angular.module('dashboard.controller', [
 
         var goToGame = false;
         var modalInstance = "";
+        socket.emit('login' , AuthenticationService.GetCredentials().currentUser);
+        socket.emit('users');
 
 
     });
