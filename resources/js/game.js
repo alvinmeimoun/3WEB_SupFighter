@@ -1,8 +1,12 @@
+//Damage
 var DAMAGE_UPPER = 5;
 var DAMAGE_KICK = 10;
-var DAMAGE_PUNCH = 5;
 var DAMAGE_FATALITY = 20;
-//var timeElapsed = (new Date().getSeconds() * 1000) + new Date().getMilliseconds();
+
+//Reload time (milliseconds)
+var RELOAD_UPPER = 1000;
+var RELOAD_KICK = 1000;
+var RELOAD_FATALITY = 3000;
 
 var canvas, ctx, player, ennemy,
     width = 500,
@@ -21,6 +25,11 @@ var canvas, ctx, player, ennemy,
     playersOnline = [];
 
 var damageHandledUpper = false, damageHandlerKick = false, damageHandlerFatality = false;
+
+var lastUpper = new Date().getTime() - RELOAD_UPPER;
+var lastKick = new Date().getTime() - RELOAD_KICK;
+var lastFatality = new Date().getTime() - RELOAD_FATALITY;
+
 var socket = io();
 
 function clearCanvas() {
@@ -109,41 +118,28 @@ function drawShip() {
 
     //Check damage upper
     if (!damageHandledUpper && collision && uppercutKey ) {
-
-
-            sendDegats(DAMAGE_UPPER);
-            damageHandledUpper = true;
+        sendDegats(DAMAGE_UPPER);
+        damageHandledUpper = true;
         console.log(leftLife);
         console.log(rightLife);
-
     }
 
     //Check damage kick + vie supérieur à 0
     if (!damageHandlerKick && collision && kickKey ) {
-
-
-
-            sendDegats(DAMAGE_KICK);
-            damageHandlerKick = true;
+        sendDegats(DAMAGE_KICK);
+        damageHandlerKick = true;
 
         console.log(leftLife);
         console.log(rightLife);
-
     }
 
     //Check damage fatality + vie supérieur à 0
     if (!damageHandlerFatality && collision && fatalityKey) {
-
-
-            sendDegats(DAMAGE_FATALITY);
-            damageHandlerFatality = true;
-
+        sendDegats(DAMAGE_FATALITY);
+        damageHandlerFatality = true;
 
         console.log(leftLife);
         console.log(rightLife);
-
-
-
     }
 
     //On reset l'état des handler damage
@@ -167,32 +163,9 @@ function loop() {
     if (player != null) sendPlayerInformation();
 }
 
-    /*
-    function cooldownOver(timeElapsed){
-        var timeNow = (new Date().getSeconds() * 1000) + new Date().getMilliseconds();
-
-        if(timeNow - timeElapsed > 1000)
-        {
-            console.log("It's Okay");
-            console.log("NOW = " + timeNow);
-            console.log("ELASPED = " + timeElapsed);
-            console.log("Calcul Con" + (timeNow - timeElapsed));
-            return true;
-
-        }
-        else{
-            console.log("It's Not OKAY");
-            console.log("NOW = " + timeNow);
-            console.log("Calcul Con" + timeNow - timeElapsed);
-            console.log("ELASPED = " +timeElapsed);
-            return false;
-
-        }
-    }
-*/
-
 
 function keyDown(e) {
+    var keyDownCurrentTime = new Date().getTime();
 
     //Documentation key
     //http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
@@ -272,120 +245,94 @@ function keyDown(e) {
             player.x -= 0;
         }
 
-        player.imageKey = STICKMAN_UPPER;
-        uppercutKey = true;
+        //Check temps de recharge attaque
+        if(keyDownCurrentTime - RELOAD_UPPER > lastUpper){
+            player.imageKey = STICKMAN_UPPER;
+            uppercutKey = true;
+            lastUpper = keyDownCurrentTime;
+        }
     }
 
     //Touche Z KICK + Augmentation de la largeur pour le sprite Kick
     else if (e.keyCode == 90) {
-
-        /*
-        if(cooldownOver(timeElapsed)) {
-            setTimeout(function () {
-
-                console.log("In SetTIMEOUT");
-
-                //Touche droite préssée au moment du Kick == Sprite kick Droite
-                if (player.srcX == 83) {
-
-                    //Width couvre une plus grande zone sur le sprite
-                    player.width = 80;
-                    player.srcX = 23;
-                    player.imageKey = STICKMAN_KICK;
-
-                }
-                //Touche gauche préssée au moment du Kick == Sprite kick Gauche
-                else if (player.srcX == 156) {
-
-                    player.width = 92;
-                    player.srcX = 140;
-                    player.imageKey = STICKMAN_KICK;
-
-                }
-
-                kickKey = true;
-
-                //Touche droite ou gauche pressée au moment du KickRight == le player ne bouge plus
-                if (rightKey == true || leftKey == true) {
-
-                    rightKey = false;
-                    player.x += 0;
-
-                    leftKey = false;
-                    player.x -= 0;
-                }
-
-                timeElapsed = (new Date().getSeconds() * 1000) + new Date().getMilliseconds();
-            }, 1000);
-
-        }
-        */
-
-        //Touche droite préssée au moment du Kick == Sprite kick Droite
-        if (player.srcX == 83) {
-
-            //Width couvre une plus grande zone sur le sprite
-            player.width = 80;
-            player.srcX = 23;
-            player.imageKey = STICKMAN_KICK;
-
-        }
-        //Touche gauche préssée au moment du Kick == Sprite kick Gauche
-        else if (player.srcX == 156) {
-
-            player.width = 92;
-            player.srcX = 140;
-            player.imageKey = STICKMAN_KICK;
-
+        //Check temps de recharge attaque
+        if(keyDownCurrentTime - RELOAD_KICK > lastKick){
+            kickKey = true;
+            lastKick = keyDownCurrentTime;
         }
 
-        kickKey = true;
+        if(kickKey){
+            //Touche droite préssée au moment du Kick == Sprite kick Droite
+            if (player.srcX == 83) {
 
-        //Touche droite ou gauche pressée au moment du KickRight == le player ne bouge plus
-        if (rightKey == true || leftKey == true) {
+                //Width couvre une plus grande zone sur le sprite
+                player.width = 80;
+                player.srcX = 23;
+                player.imageKey = STICKMAN_KICK;
 
-            rightKey = false;
-            player.x += 0;
+            }
+            //Touche gauche préssée au moment du Kick == Sprite kick Gauche
+            else if (player.srcX == 156) {
 
-            leftKey = false;
-            player.x -= 0;
+                player.width = 92;
+                player.srcX = 140;
+                player.imageKey = STICKMAN_KICK;
+
+            }
+
+
+            //Touche droite ou gauche pressée au moment du KickRight == le player ne bouge plus
+            if (rightKey == true || leftKey == true) {
+
+                rightKey = false;
+                player.x += 0;
+
+                leftKey = false;
+                player.x -= 0;
+            }
         }
+
     }
 
     //Touche E FATALITY + Augmentation de la largeur pour le sprite Kick + Augmentation de la vitesse
     else if (e.keyCode == 69) {
-
-        //Touche droite préssée au moment du Kick == Sprite Fatality Droite
-        if (player.srcX == 83) {
-
-            //Width couvre une plus grande zone sur le sprite
-            player.width = 135;
-            player.srcX = 5;
-            player.x += 100;
-            player.imageKey = STICKMAN_FATALITY;
-
-        }
-        //Touche gauche préssée au moment du Kick == Sprite Fatality Gauche
-        else if (player.srcX == 156) {
-
-            player.width = 135;
-            player.srcX = 145;
-            player.x -= 100;
-            player.imageKey = STICKMAN_FATALITY;
-
+        //Check temps de recharge attaque
+        if(keyDownCurrentTime - RELOAD_FATALITY > lastFatality){
+            fatalityKey = true;
+            lastFatality = keyDownCurrentTime;
         }
 
-        //Touche droite ou gauche pressée au moment du Fatality == le player ne bouge plus
-        if (rightKey == true || leftKey == true) {
+        if(fatalityKey){
+            //Touche droite préssée au moment du Kick == Sprite Fatality Droite
+            if (player.srcX == 83) {
 
-            rightKey = false;
-            player.x += 0;
+                //Width couvre une plus grande zone sur le sprite
+                player.width = 135;
+                player.srcX = 5;
+                player.x += 100;
+                player.imageKey = STICKMAN_FATALITY;
 
-            leftKey = false;
-            player.x -= 0;
+            }
+            //Touche gauche préssée au moment du Kick == Sprite Fatality Gauche
+            else if (player.srcX == 156) {
+
+                player.width = 135;
+                player.srcX = 145;
+                player.x -= 100;
+                player.imageKey = STICKMAN_FATALITY;
+
+            }
+
+            //Touche droite ou gauche pressée au moment du Fatality == le player ne bouge plus
+            if (rightKey == true || leftKey == true) {
+
+                rightKey = false;
+                player.x += 0;
+
+                leftKey = false;
+                player.x -= 0;
+            }
         }
-
-        fatalityKey = true;
     }
 
     //Touche space == JUMP + Augmentation de la valeur du saut
@@ -713,6 +660,5 @@ function receiveDegats(jsonString) {
 
         }
     }
-
 
 }
