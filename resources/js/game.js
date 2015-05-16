@@ -699,6 +699,18 @@ function receiveDegats(jsonString) {
 
             socket.emit('sendResult', sendedResult);
 
+            playersOnline.forEach(function(item){
+
+                if(item.username == objFromJson.causedBy )
+                {
+                    playersOnline.splice(item,1);
+                }
+                if(item.username == currentPlayerName)
+                {
+                    playersOnline.splice(item,1);
+                }
+            })
+
         }
     }
 

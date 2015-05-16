@@ -46,12 +46,24 @@ angular.module('quickFightButton.controller', [
                            if((item.wins >= user.wins && item.wins <= (user.wins +5)) /*|| (item.wins <= user.wins - 5) /* || item.losses <= user.losses */)
                            {
                                console.log("item " + JSON.stringify(item.username));
-
-                               // var socket = io();
                                var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
                                socket.emit('sendInvite',invite);
+                              /* var temp = [] ;
+                               socket.emit('clients');
+                               socket.on('clients', function(clients)
+                               {
+                                  temp = clients;
+                               });
+                               temp.forEach(function(client){
+                                   if (client.username == item.username){
 
-                               return ;
+                                       return ;
+                                   }
+                               });*/
+                               // var socket = io();
+
+
+                               return false;
                            }
                            else
                            if((item.losses >= user.losses && item.losses <= (user.losses +5)))
@@ -64,7 +76,7 @@ angular.module('quickFightButton.controller', [
                            else
                            {
                                $scope.noUser = "No user found, please invite online user";
-                               return;
+                               return false;
                            }
 
                            /*switch (item.wins){
