@@ -26,7 +26,7 @@ angular.module('dashboard.controller', [
 
         var goToGame = false;
         var modalInstance = "";
-        socket.emit('login' , AuthenticationService.GetCredentials().currentUser);
+        //socket.emit('login' , AuthenticationService.GetCredentials().currentUser);
         socket.emit('users');
 
 

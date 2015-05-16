@@ -40,13 +40,16 @@ angular.module('connectedUsers.controller', [
                             else
                             {
                                 usersList[i] = users[i];
-                                usersList[i].state = users[i].state;
+                               // usersList[i].state = users[i].state;
                                 if (users[i].state == $scope.states[0])
                                 {
+                                    usersList[i].state = $scope.states[0];
                                     usersList[i].disable = false;
+
                                 }
                                 else
                                 {
+                                    usersList[i].state = $scope.states[1];
                                     usersList[i].disable = true;
                                 }
                             }
@@ -76,15 +79,35 @@ angular.module('connectedUsers.controller', [
                             else
                             {
                                 usersList[i] = users[i];
-                                usersList[i].state = users[i].state;
-                                if (users[i].state == $scope.states[0])
+                                //usersList[i].state = users[i].state;
+                                if ($scope.listOfUsers.length !== 0)
                                 {
-                                    usersList[i].disable = false;
+                                    if ($scope.listOfUsers[i].state == $scope.states[1])
+                                    {
+
+                                        usersList[i].state = $scope.states[1];
+                                        usersList[i].disable = true;
+                                    }
+                                    else
+                                    {
+                                        usersList[i].state = $scope.states[0];
+                                        usersList[i].disable = false;
+                                    }
                                 }
-                                else
-                                {
-                                    usersList[i].disable = true;
+                                else {
+                                    if (users.state == $scope.states[1])
+                                    {
+
+                                        usersList[i].state = $scope.states[1];
+                                        usersList[i].disable = true;
+                                    }
+                                    else
+                                    {
+                                        usersList[i].state = $scope.states[0];
+                                        usersList[i].disable = false;
+                                    }
                                 }
+
                             }
 
                         }
@@ -102,7 +125,7 @@ angular.module('connectedUsers.controller', [
             //invitedUser = item;
             console.log(item);
             var user = item;
-            socket.emit('updateUserState',user);
+            //socket.emit('updateUserState',user);
             var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
             socket.emit('sendInvite',invite);
 

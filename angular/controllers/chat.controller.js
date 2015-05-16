@@ -14,7 +14,7 @@ angular.module('chat.controller', [
     ])
 // Controlleur du chat
     .controller("chatCtrl", function($scope, $http, $location, AuthenticationService,mySocket, $modal ) {
-
+        var socket = io();
         // On set l'username dans le local storage pour son utilisation dans le chat
         var username = AuthenticationService.GetCredentials().currentUser.username;
       //  var socket = io();
@@ -85,7 +85,7 @@ angular.module('chat.controller', [
         socket.on('listenToResponse', function(invite){
             //console.log(invite.count);
 
-            if(invite !== "undefined" || invite !== null || typeof(invite)  !== "undefined" || typeof(invite) !== null || typeof(invite.fromUser) !== null  || typeof(invite.ToUser) !== null)
+            if(invite !== null)
             {
                 //console.log("invite" + invite.fromUser.username + " " + AuthenticationService.GetCredentials().currentUser.username );
 

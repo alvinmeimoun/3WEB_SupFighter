@@ -130,17 +130,28 @@ io.on('connection', function(socket)
     socket.on('sendInvite', function(invite)
     {
         //console.log('send invite ' + invite);
-
+        var count = 0;
 
         if (typeof(invite) !== 'undefined')
         {
-            listOfInvitations.push(invite);
-           // console.log("list : " + listOfInvitations);
+
+
+            console.log("list : " + listOfInvitations.length);
             listOfInvitations.forEach(function(item)
             {
+                if (invite == item)
+                {
+                    count++;
+                }
+
                 console.log("list invitations item : " + JSON.stringify(item));
             });
-            io.emit('sendInvite',listOfInvitations);
+            if(count == 0){
+                listOfInvitations.push(invite);
+            }
+
+            console.log('count ' + count);
+          //  io.emit('sendInvite',listOfInvitations);
         }
 
         io.emit('sendInvite', listOfInvitations);
@@ -198,7 +209,9 @@ io.on('connection', function(socket)
 
     });
         socket.on('updateUserState', function (user){
-            clients.forEach(function(client){
+
+            var users = clients;
+            users.forEach(function(client){
                 if (user.username == client.username )
                 {
                     if (client.state == states[0]){
@@ -218,11 +231,8 @@ io.on('connection', function(socket)
 
 
                 }
-                else
-                if ((user.username == client.username && client.state == states[1]))
-                {
-
-                }
+                clients = users;
+                console.log('clients :' + JSON.stringify(clients));
 
             });
             io.emit('updateUserState',user);
@@ -313,9 +323,6 @@ io.on('connection', function(socket)
         });
         socket.on('sendResult', function(sendedResult){
             //console.log('test' + sendedResult);
-
-
-                console.log('ITEM ---- ' + JSON.stringify(sendedResult));
 
             io.emit('sendResult', sendedResult);
         })

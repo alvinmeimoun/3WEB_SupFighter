@@ -51,7 +51,7 @@ angular.module('gamezone.controller', [
 
 
                 var urlCompleted = serverUrl + '/updateLadder';
-                var c = {username: sendedResult.winnerUser , wins : 1, timePlayed : ""};
+                var c = {username: sendedResult.winnerUser , wins : 1 , losses: 0, timePlayed : ""};
                 // Envoi de notre requête post à notre api pour envoyer le score
                 $http.post(urlCompleted,c)
                     .success(function(data, status, headers, config) {
@@ -101,7 +101,7 @@ angular.module('gamezone.controller', [
                 });
 
                 var urlCompleted2 = serverUrl + '/updateLadder';
-                var c2 = {username: sendedResult.looserUser , losses : 1 , timePlayed : ""};
+                var c2 = {username: sendedResult.looserUser , wins: 0, losses : 1 , timePlayed : ""};
                 // Envoi de notre requête post à notre api pour vérifier l'exactitude de notre login mdp
                 $http.post(urlCompleted2,c2)
                     .success(function(data, status, headers, config) {
