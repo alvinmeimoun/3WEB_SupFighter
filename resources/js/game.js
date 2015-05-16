@@ -8,6 +8,9 @@ var RELOAD_UPPER = 1000;
 var RELOAD_KICK = 1000;
 var RELOAD_FATALITY = 3000;
 
+//fight Start Date
+var fightStartDate;
+
 var canvas, ctx, player, ennemy,
     width = 500,
     height = 400,
@@ -53,10 +56,30 @@ function drawShip() {
         barViePlayerX = 350;
     }
 
+    //Calculation Timer
+    var time = Math.round((new Date() - fightStartDate)/1000);
+    var seconds = time;
+    var minutes = 0;
+
+    while(seconds >= 61){
+        minutes += 1;
+        seconds -= 60;
+    }
+
     //Affichage Text Player
     ctx.font = "15px ARIAL";
     ctx.fillStyle = "black";
     ctx.fillText(currentPlayerName, barViePlayerX, 15);
+
+    //Affichage Minutes
+    ctx.font = "15px ARIAL";
+    ctx.fillStyle = "black";
+    ctx.fillText(minutes + ":", 245,15);
+
+    //Affichage Secondes
+    ctx.font = "15px ARIAL";
+    ctx.fillStyle = "black";
+    ctx.fillText(seconds, 260,15);
 
     //Affichage Text Ennemy
     ctx.font = "15px ARIAL";
@@ -500,6 +523,8 @@ function keyUp(e) {
 }
 
 function launchGame() {
+    fightStartDate = new Date();
+    console.log("début: " + fightStartDate);
     player = undefined;
     ennemy = undefined;
     canvas = document.getElementById('canvas');
@@ -641,6 +666,8 @@ function receiveDegats(jsonString) {
         if (player.life <= 0) {
 
             console.log(" player " + objFromJson.causedBy + " win ");
+            var timeElapsed = (new Date() - fightStartDate)/1000;
+            console.log("durée: " + timeElapsed + " Secondes");
             var sendedResult = {winnerUser: objFromJson.causedBy, looserUser: currentPlayerName};
 
 
