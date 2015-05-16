@@ -668,7 +668,7 @@ function receiveDegats(jsonString) {
             console.log(" player " + objFromJson.causedBy + " win ");
             var timeElapsed = (new Date() - fightStartDate)/1000;
             console.log("durée: " + timeElapsed + " Secondes");
-            var sendedResult = {winnerUser: objFromJson.causedBy, looserUser: currentPlayerName};
+            var sendedResult = {winnerUser: objFromJson.causedBy, looserUser: currentPlayerName , timeElapsed : timeElapsed};
 
 
             socket.emit('sendResult', sendedResult);

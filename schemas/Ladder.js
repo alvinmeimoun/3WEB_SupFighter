@@ -5,7 +5,7 @@ var ladderSchema = new Schema({
     username: String,
     wins: Number,
     losses: Number,
-    timePlayed : String
+    timePlayed : Number
 });
 
 ladderSchema.virtual('ID').get(function(){

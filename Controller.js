@@ -155,7 +155,7 @@ var Controller = {
         });
     },
     updateLadder: function(req, res) {
-        var optional_params = ['username', 'wins' ,'losses', 'timePlayed'];
+        var optional_params = ['username', 'wins' ,'losses', 'timeElapsed'];
 
 
         Ladder.findOne({ username : req.body.username }, function(err, c) {
@@ -163,9 +163,22 @@ var Controller = {
                 return Controller.send(500, err.toString(), {}, res);
             if (c == null)
                 return Controller.addLadder(req,res);
-           // console.log(JSON.stringify(c));
+            console.log(JSON.stringify(req.body));
             if (req.body.wins == 1)
+            {
                 c.wins += 1;
+                console.log("time "+  req.body.timePlayed);
+                if (c.timePlayed == 0){
+                    c.timePlayed = req.body.timePlayed;
+                    console.log("time "+  c.timePlayed);
+                }
+                else
+                if ( req.body.timePlayed < c.timePlayed)
+                {
+                    c.timePlayed = req.body.timePlayed;
+                    console.log("time "+  c.timePlayed);
+                }
+            }
 
             else
                 c.losses += 1;
