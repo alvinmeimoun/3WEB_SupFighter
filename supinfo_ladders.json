@@ -3,7 +3,7 @@
     "wins" : 8,
     "losses" : 5,
     "__v" : 0,
-    "timePlayed" : ""
+    "timePlayed" : 0
 }
 {
 
@@ -11,7 +11,7 @@
     "wins" : 0,
     "losses" : 8,
     "__v" : 0,
-    "timePlayed" : ""
+    "timePlayed" : 0
 }
 {
 
@@ -19,7 +19,7 @@
     "wins" : 12,
     "losses" : 7,
     "__v" : 0,
-    "timePlayed" : ""
+    "timePlayed" : 0
 }
 {
 
@@ -27,5 +27,5 @@
     "wins" : 0,
     "losses" : 1,
     "__v" : 0,
-    "timePlayed" : ""
+    "timePlayed" : 0
 }

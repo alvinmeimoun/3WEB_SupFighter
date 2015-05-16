@@ -48,18 +48,14 @@ angular.module('gamezone.controller', [
                 });
 
                response = sendedResult;
-
-
                 var urlCompleted = serverUrl + '/updateLadder';
-                var c = {username: sendedResult.winnerUser , wins : 1 , losses: 0, timePlayed : ""};
+                var c = {username: sendedResult.winnerUser , wins : 1 , losses: 0, timePlayed : sendedResult.timeElapsed};
                 // Envoi de notre requête post à notre api pour envoyer le score
                 $http.post(urlCompleted,c)
                     .success(function(data, status, headers, config) {
                         console.log("success " + data.result);
                        //var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser };
                         //socket.emit('RemoveInvitation', invite);
-
-
                     })
                     .error(function(data, status, headers, config) {
                         // alert("An error occured: " + data.error);
@@ -101,7 +97,7 @@ angular.module('gamezone.controller', [
                 });
 
                 var urlCompleted2 = serverUrl + '/updateLadder';
-                var c2 = {username: sendedResult.looserUser , wins: 0, losses : 1 , timePlayed : ""};
+                var c2 = {username: sendedResult.looserUser , wins: 0, losses : 1 , timePlayed : 0};
                 // Envoi de notre requête post à notre api pour vérifier l'exactitude de notre login mdp
                 $http.post(urlCompleted2,c2)
                     .success(function(data, status, headers, config) {
