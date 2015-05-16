@@ -321,6 +321,11 @@ io.on('connection', function(socket)
         socket.on('sendDegats', function(degatsJsonString){
            io.emit('ioSendDegats', degatsJsonString);
         });
+
+        socket.on('gameFinished', function(playerNameA, playerNameB){
+            io.emit('ioGameFinished', playerNameA, playerNameB);
+        });
+
         socket.on('sendResult', function(sendedResult){
             //console.log('test' + sendedResult);
 

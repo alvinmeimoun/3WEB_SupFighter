@@ -120,26 +120,18 @@ function drawShip() {
     if (!damageHandledUpper && collision && uppercutKey ) {
         sendDegats(DAMAGE_UPPER);
         damageHandledUpper = true;
-        console.log(leftLife);
-        console.log(rightLife);
     }
 
     //Check damage kick + vie supérieur à 0
     if (!damageHandlerKick && collision && kickKey ) {
         sendDegats(DAMAGE_KICK);
         damageHandlerKick = true;
-
-        console.log(leftLife);
-        console.log(rightLife);
     }
 
     //Check damage fatality + vie supérieur à 0
     if (!damageHandlerFatality && collision && fatalityKey) {
         sendDegats(DAMAGE_FATALITY);
         damageHandlerFatality = true;
-
-        console.log(leftLife);
-        console.log(rightLife);
     }
 
     //On reset l'état des handler damage
@@ -474,16 +466,12 @@ function keyUp(e) {
 
         player.imageKey = STICKMAN_NORMAL;
         crouchKey = false;
-
-        console.log(rightKey + " " + leftKey)
-
     }
 
     //Touche F == BLOCK + Affichage du sprite de base
     else if (e.keyCode == 70) {
 
         //crouchBlock = false;
-        console.log("Block " + blockKey);
         //Si on relache crouch en étant accroupis alors on repasse au crouch de base
         /*if(crouchBlock == true ){
          player.imageKey = STICKMAN_CROUCH;
@@ -513,7 +501,6 @@ function launchGame() {
 
     socket.emit('get Players');
     socket.on('get Players', function (players) {
-        //console.log('recept '+ players);
         playersOnline = players;
     });
 
@@ -527,6 +514,13 @@ function launchGame() {
 
     socket.on('ioSendDegats', function (degatsJsonString) {
         receiveDegats(degatsJsonString);
+    });
+
+    socket.on('ioGameFinished', function(playerNameA, playerNameB){
+       if((player.name == playerNameA && ennemy.name && playerNameB)
+            || player.name == playerNameB && ennemy.name == playerNameA){
+           unregisterSocketListeners();
+       }
     });
 }
 
@@ -639,12 +633,12 @@ function receiveDegats(jsonString) {
         player.life -= objFromJson.degats;
 
         if (player.life <= 0) {
-
-            console.log(" player " + objFromJson.causedBy + " win ");
             var sendedResult = {winnerUser: objFromJson.causedBy, looserUser: currentPlayerName};
 
 
             socket.emit('sendResult', sendedResult);
+
+            socket.emit('gameFinished', player.name, ennemy.name);
 
             playersOnline.forEach(function(item){
 
@@ -660,5 +654,12 @@ function receiveDegats(jsonString) {
 
         }
     }
+}
 
+function unregisterSocketListeners(){
+    //Unregister sockets
+    socket.removeListener('ioGameFinished');
+    socket.removeListener('iUpdatePlayerPosition');
+    socket.removeListener('ioSendDegats');
+    socket.removeListener('get Players');
 }

@@ -11,7 +11,7 @@ angular.module('socket.service', [
 
 
 .factory('mySocket', function (socketFactory) {
-        var myIoSocket = io.connect('http://192.168.1.4:8000');
+        var myIoSocket = io.connect('http://localhost:8000');
 
         mySocket = socketFactory({
             ioSocket: myIoSocket
