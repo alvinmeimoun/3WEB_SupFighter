@@ -1,7 +1,7 @@
 var DAMAGE_UPPER = 5;
 var DAMAGE_KICK = 10;
 var DAMAGE_PUNCH = 5;
-var DAMAGE_FATALITY = 30;
+var DAMAGE_FATALITY = 20;
 //var timeElapsed = (new Date().getSeconds() * 1000) + new Date().getMilliseconds();
 
 var canvas, ctx, player, ennemy,
@@ -10,20 +10,17 @@ var canvas, ctx, player, ennemy,
     rightKey = false,
     leftKey = false,
     uppercutKey = false,
-    uppercutCDValue = 0,
     kickKey = false,
-    kickCDValue = 0,
     jumpKey = false,
     crouchKey = false,
     blockKey = false,
     crouchBlock = false,
     fatalityKey = false,
-    fatalityCDValue = 0,
     upKey = false,
     downKey = false,
     playersOnline = [];
 
-var damageHandledUpper = false, damageHandlerKick = false, damageHandlerFatality;
+var damageHandledUpper = false, damageHandlerKick = false, damageHandlerFatality = false;
 var socket = io();
 
 function clearCanvas() {
@@ -87,7 +84,6 @@ function drawShip() {
         ctx.fillRect(350, 25, (rightLife / 100) * 140, 25);
     }
 
-
     //Bordure de la barre de vie de l'ennemy
     ctx.strokeStyle = "black";
     ctx.lineWidth = 3;
@@ -111,57 +107,42 @@ function drawShip() {
 
     var collision = isInCollision();
 
-    /*
-     if (player.life <= 0) {
-     player.life = 0;
-     } else if (ennemy.life <= 0) {
-     ennemy.life = 0;
-     }*/
-
     //Check damage upper
-    if (!damageHandledUpper && collision && uppercutKey && ennemy.life > 0 && player.life > 0) {
+    if (!damageHandledUpper && collision && uppercutKey ) {
 
-        if (ennemy.life > 0 && ennemy.life <= 100) {
+
             sendDegats(DAMAGE_UPPER);
             damageHandledUpper = true;
-        }
-        else if (player.life > 0 && player.life <= 100) {
-            sendDegats(DAMAGE_UPPER);
-            damageHandledUpper = true;
-        }
-
+        console.log(leftLife);
+        console.log(rightLife);
 
     }
 
     //Check damage kick + vie supérieur à 0
-    if (!damageHandlerKick && collision && kickKey && ennemy.life > 0 && player.life > 0) {
+    if (!damageHandlerKick && collision && kickKey ) {
 
-        if (ennemy.life > 0 && ennemy.life <= 100) {
+
+
             sendDegats(DAMAGE_KICK);
             damageHandlerKick = true;
 
-        }
-        if (player.life > 0 && player.life <= 100) {
-            sendDegats(DAMAGE_KICK);
-            damageHandlerKick = true;
-
-        }
+        console.log(leftLife);
+        console.log(rightLife);
 
     }
 
     //Check damage fatality + vie supérieur à 0
-    if (!damageHandlerFatality && collision && fatalityKey && ennemy.life > 0 && player.life > 0) {
+    if (!damageHandlerFatality && collision && fatalityKey) {
 
-        if (ennemy.life > 0 && ennemy.life <= 100) {
+
             sendDegats(DAMAGE_FATALITY);
             damageHandlerFatality = true;
 
-        }
-        if (player.life > 0 && player.life <= 100) {
-            sendDegats(DAMAGE_FATALITY);
-            damageHandlerFatality = true;
 
-        }
+        console.log(leftLife);
+        console.log(rightLife);
+
+
 
     }
 
@@ -182,39 +163,9 @@ function drawShip() {
 function loop() {
     clearCanvas();
     drawShip();
-
     //Envoi mise à jour position joueur
     if (player != null) sendPlayerInformation();
 }
-
-
-var cooldowns = function (target, iMax, step) {
-    //console.log(target + " " + iteration);
-    var x;
-
-    switch (target) {
-        case "uppercut":
-            x = (200 / iMax);
-
-            uppercutCDValue = 200 - (x * (step + 1));
-            break;
-
-        case "kick":
-            x = (200 / iMax);
-
-            kickCDValue = 200 - (x * (step + 1));
-            break;
-
-        case "fatality":
-            x = (200 / iMax);
-
-            fatalityCDValue = 200 - (x * (step + 1));
-            break;
-
-        default:
-            break;
-    }
-};
 
     /*
     function cooldownOver(timeElapsed){
@@ -739,7 +690,7 @@ function receiveDegats(jsonString) {
     var objFromJson = JSON.parse(jsonString);
     if (objFromJson.causedBy !== currentPlayerName) {
         player.life -= objFromJson.degats;
-        console.log(player.life);
+
         if (player.life <= 0) {
 
             console.log(" player " + objFromJson.causedBy + " win ");
