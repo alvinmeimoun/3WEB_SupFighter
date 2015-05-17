@@ -1,7 +1,18 @@
 Bienvenue sur SupFighter
 
 Pour utiliser l'application, suivre les étapes ci-dessous :
-- importer dans la base de données MongoDb le fichier supinfo_users.json puis supinfo_ladders.json
+- importer dans la base de données MongoDb le fichier supinfo_users.json puis supinfo_ladders.json grace à MongoVue
+
+ou ouvrir le listener mongodb dans Programmes/MongoDB/server/bin/3.0/mongod.exe
+et tapez les commandes suivantes dans Programmes/MongoDB/server/bin/3.0/mongo.exe
+
+-------
+use supinfo
+db.users.insert({ "username" : "antonin", "password" : "sha1$d1d5e390$1$b3ff787414c6775ebe560ea7d51f4ef9028ae0bc", __v" : 0 })
+db.ladders.insert({ "username" : "antonin", "wins" : 5, "losses" : 6, "timePlayed" : 8.143, "__v" : 0 })
+
+-------
+Mongo db creera automatiquement les collections
 
 - aller dans le répertoire racine du projet et ouvrir un invite de commande puis taper  :
     - npm install ( peut prendre quelques minutes )
