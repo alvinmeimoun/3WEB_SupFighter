@@ -467,14 +467,6 @@ function keyUp(e) {
     //Touche F == BLOCK + Affichage du sprite de base
     else if (e.keyCode == 70) {
 
-        //crouchBlock = false;
-        //Si on relache crouch en étant accroupis alors on repasse au crouch de base
-        /*if(crouchBlock == true ){
-         player.imageKey = STICKMAN_CROUCH;
-         crouchBlock = false;
-         }
-
-         else*/
         if (blockKey == true) {
             player.imageKey = STICKMAN_NORMAL;
             blockKey = false;
@@ -568,32 +560,6 @@ function getCurrentPlayer() {
 
     });
     return playerNumber;
-    /*playersOnline.forEach(function(item)
-     {
-     switch (item.number){
-     case 1 : playerNumber = item.number;
-     break;
-     case 2 : playerNumber = item.number;
-     break;
-     }
-     return playerNumber;
-
-
-     /* if(item.username === localStorage.getItem("user") && item.number === 1)
-     {
-     //console.log(" current player 1 " + item.username);
-     playerNumber = item.number;
-     return playerNumber;
-
-     }
-     if(item.username === localStorage.getItem("user") && item.number === 2)
-     {
-     playerNumber = item.number;
-     //console.log(" current player 2" + item.username);
-     return playerNumber;
-     }*/
-    //});
-
 }
 
 function isInCollision() {
