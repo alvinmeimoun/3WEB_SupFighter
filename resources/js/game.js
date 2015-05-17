@@ -542,6 +542,14 @@ function launchGame() {
     socket.on('ioGameFinished', function(playerNameA, playerNameB){
        if((player.name == playerNameA && ennemy.name && playerNameB)
             || player.name == playerNameB && ennemy.name == playerNameA){
+           if(player.life > 0){
+               player.imageKey = STICKMAN_WINNER;
+               ennemy.imageKey = STICKMAN_LOOSER;
+           } else {
+               player.imageKey = STICKMAN_LOOSER;
+               ennemy.imageKey = STICKMAN_WINNER;
+           }
+
            unregisterListeners();
        }
     });
@@ -656,8 +664,10 @@ function receiveDegats(jsonString) {
         player.life -= objFromJson.degats;
 
         if (player.life <= 0) {
+            player.imageKey = STICKMAN_LOOSER;
+            ennemy.imageKey = STICKMAN_WINNER;
+
             var timeElapsed = (new Date() - fightStartDate)/1000;
-            console.log("durée: " + timeElapsed + " Secondes");
             var sendedResult = {winnerUser: objFromJson.causedBy, looserUser: currentPlayerName , timeElapsed : timeElapsed};
 
 
