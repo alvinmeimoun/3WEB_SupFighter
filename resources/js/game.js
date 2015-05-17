@@ -23,8 +23,6 @@ var canvas, ctx, player, ennemy,
     blockKey = false,
     crouchBlock = false,
     fatalityKey = false,
-    upKey = false,
-    downKey = false,
     playersOnline = [];
 
 var damageHandledUpper = false, damageHandlerKick = false, damageHandlerFatality = false;
@@ -34,6 +32,21 @@ var lastKick = new Date().getTime() - RELOAD_KICK;
 var lastFatality = new Date().getTime() - RELOAD_FATALITY;
 
 var socket = io();
+
+function resetNeededValuesToDefault(){
+    rightKey = false;
+    leftKey = false;
+    uppercutKey = false;
+    kickKey = false;
+    jumpKey = false;
+    crouchKey = false;
+    blockKey = false;
+    crouchBlock = false;
+    fatalityKey = false;
+    damageHandledUpper = false;
+    damageHandlerKick = false;
+    damageHandlerFatality = false;
+}
 
 function clearCanvas() {
     ctx.clearRect(0, 0, width, height);
@@ -189,28 +202,8 @@ function keyDown(e) {
     if (e.keyCode == 39) {
         rightKey = true;
 
-        //UppercutKey pressée au moment du déplacement == le player s'arrête
-        if (uppercutKey == true) {
-            player.x += 0;
-            rightKey = false;
-        }
-        //KickRight pressée au moment du déplacement == le player s'arrête
-        else if (kickKey == true) {
-            player.x += 0;
-            rightKey = false;
-        }
-        //Crouch pressée au moment du déplacement == le player s'arrête
-        else if (crouchKey == true) {
-            player.x += 0;
-            rightKey = false;
-        }
-        //block préssée au moment du déplacement == le player s'arrête
-        else if (blockKey == true) {
-            player.x += 0;
-            rightKey = false;
-        }
-        //fatality préssée au moment du déplacement == le player s'arrête
-        else if (fatalityKey == true) {
+        //Coups ou action pressés au moment du déplacement == le player s'arrête
+        if (uppercutKey || kickKey || crouchKey || blockKey || fatalityKey) {
             player.x += 0;
             rightKey = false;
         }
@@ -219,28 +212,8 @@ function keyDown(e) {
     else if (e.keyCode == 37) {
         leftKey = true;
 
-        //UppercutKey pressée au moment du déplacement == le player s'arrête
-        if (uppercutKey == true) {
-            player.x -= 0;
-            leftKey = false;
-        }
-        //KickRight pressée au moment du déplacement == le player s'arrête
-        else if (kickKey == true) {
-            player.x -= 0;
-            leftKey = false;
-        }
-        //crouch pressée au moment du déplacement == le player s'arrête
-        else if (crouchKey == true) {
-            player.x -= 0;
-            leftKey = false;
-        }
-        //block préssée au moment du déplacement == le player s'arrête
-        else if (blockKey == true) {
-            player.x -= 0;
-            leftKey = false;
-        }
-        //fatality préssée au moment du déplacement == le player s'arrête
-        else if (fatalityKey == true) {
+        //Coup ou action pressée au moment du déplacement == le player s'arrête
+        if (uppercutKey || kickKey || crouchKey || blockKey || fatalityKey) {
             player.x -= 0;
             leftKey = false;
         }
@@ -510,14 +483,16 @@ function keyUp(e) {
     }
 }
 
+var loopIntervalId = 0;
 function launchGame() {
+    resetNeededValuesToDefault();
     fightStartDate = new Date();
     player = undefined;
     ennemy = undefined;
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    setInterval(loop, 1000 / 30);
+    loopIntervalId = setInterval(loop, 1000 / 30);
 
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
@@ -701,4 +676,6 @@ function unregisterListeners(){
     //Unregister events listener
     document.removeEventListener('keydown', keyDown);
     document.removeEventListener('keyup', keyUp);
+
+    clearInterval(loopIntervalId);
 }
