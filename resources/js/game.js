@@ -512,17 +512,15 @@ function keyUp(e) {
 
 function launchGame() {
     fightStartDate = new Date();
-    console.log("début: " + fightStartDate);
     player = undefined;
     ennemy = undefined;
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
     setInterval(loop, 1000 / 30);
+
     document.addEventListener('keydown', keyDown, false);
     document.addEventListener('keyup', keyUp, false);
-
-
 
     socket.emit('get Players');
     socket.on('get Players', function (players) {
@@ -544,7 +542,15 @@ function launchGame() {
     socket.on('ioGameFinished', function(playerNameA, playerNameB){
        if((player.name == playerNameA && ennemy.name && playerNameB)
             || player.name == playerNameB && ennemy.name == playerNameA){
-           unregisterSocketListeners();
+           if(player.life > 0){
+               player.imageKey = STICKMAN_WINNER;
+               ennemy.imageKey = STICKMAN_LOOSER;
+           } else {
+               player.imageKey = STICKMAN_LOOSER;
+               ennemy.imageKey = STICKMAN_WINNER;
+           }
+
+           unregisterListeners();
        }
     });
 }
@@ -658,8 +664,10 @@ function receiveDegats(jsonString) {
         player.life -= objFromJson.degats;
 
         if (player.life <= 0) {
+            player.imageKey = STICKMAN_LOOSER;
+            ennemy.imageKey = STICKMAN_WINNER;
+
             var timeElapsed = (new Date() - fightStartDate)/1000;
-            console.log("durée: " + timeElapsed + " Secondes");
             var sendedResult = {winnerUser: objFromJson.causedBy, looserUser: currentPlayerName , timeElapsed : timeElapsed};
 
 
@@ -683,10 +691,14 @@ function receiveDegats(jsonString) {
     }
 }
 
-function unregisterSocketListeners(){
+function unregisterListeners(){
     //Unregister sockets
     socket.removeListener('ioGameFinished');
     socket.removeListener('iUpdatePlayerPosition');
     socket.removeListener('ioSendDegats');
     socket.removeListener('get Players');
+
+    //Unregister events listener
+    document.removeEventListener('keydown', keyDown);
+    document.removeEventListener('keyup', keyUp);
 }
