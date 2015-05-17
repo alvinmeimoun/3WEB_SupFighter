@@ -1,31 +1,35 @@
 {
-    "username" : "test6",
-    "wins" : 8,
-    "losses" : 5,
-    "__v" : 0,
-    "timePlayed" : 0
+"username" : "test6",
+"wins" : 17,
+"losses" : 12,
+"__v" : 0,
+"timePlayed" : 15.502
 }
 {
-
-    "username" : "test8",
-    "wins" : 0,
-    "losses" : 8,
-    "__v" : 0,
-    "timePlayed" : 0
+"username" : "test8",
+"wins" : 5,
+"losses" : 15,
+"__v" : 0,
+"timePlayed" : 5.713
 }
 {
-
-    "username" : "antonin",
-    "wins" : 12,
-    "losses" : 7,
-    "__v" : 0,
-    "timePlayed" : 0
+"username" : "mel",
+"wins" : 15,
+"losses" : 8,
+"__v" : 0,
+"timePlayed" : 11.881
 }
 {
-
-    "username" : "mel",
-    "wins" : 0,
-    "losses" : 1,
-    "__v" : 0,
-    "timePlayed" : 0
+"username" : "toto",
+"wins" : 5,
+"losses" : 10,
+"timePlayed" : 21.353,
+"__v" : 0
+}
+{
+"username" : "antonin",
+"wins" : 5,
+"losses" : 6,
+"timePlayed" : 8.143,
+"__v" : 0
 }

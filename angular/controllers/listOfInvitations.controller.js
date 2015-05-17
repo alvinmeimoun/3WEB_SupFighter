@@ -19,8 +19,6 @@ angular.module('listOfInvitations.controller', [
         $scope.hadList = false;
         // Nous envoyons une requête au serveur pour récupérer la liste des invitations
 
-        //var socket = io();
-
         socket.emit('sendInvite');
         socket.on('sendInvite', function(invite){
 
@@ -36,7 +34,6 @@ angular.module('listOfInvitations.controller', [
                         invitationsList.forEach(function(item)
                         {
                             if(invite[i].fromUser.username != item.fromUser.username )
-                              //  invite[i].invitState = states[0];
                                 invitationsList.push(invite[i]);
                         });
                         }

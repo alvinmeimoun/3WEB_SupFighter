@@ -1,5 +1,4 @@
 {
-
 "username" : "test6",
 "password" : "sha1$fe3ddf72$1$2330772fee702f1761a0ac2097b43893b476c24b",
 "__v" : 0
@@ -11,14 +10,18 @@
 "__v" : 0
 }
 {
-
 "username" : "mel",
 "password" : "sha1$bdb50bd3$1$da0808fd5ef941ebdb16257f221d1142ee1fd26a",
 "__v" : 0
 }
 {
-
 "username" : "antonin",
 "password" : "sha1$d1d5e390$1$b3ff787414c6775ebe560ea7d51f4ef9028ae0bc",
 "__v" : 0
 }
+{
+"username" : "toto",
+"password" : "sha1$7a3db927$1$efad1911ad8b851b37e166427a9d9853f59f23f3",
+"__v" : 0
+}
+

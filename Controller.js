@@ -6,11 +6,6 @@ var fs = require('fs'),
 
 var Controller = {
 
-    sendInvite: function(req, res)
-    {
-
-
-    },
 
     required: function(keys, type, req) {
         var ret = {};
@@ -118,8 +113,6 @@ var Controller = {
             password: hashedPwd
         });
 
-
-        //console.log(user.username  + " " + user.password);
         user.save(function(err, c) {
             if (err)
                 return Controller.send(500, err.toString(), {}, res);
@@ -135,9 +128,6 @@ var Controller = {
         if (parse.error)
             return Controller.send(403, "Missing `" + parse.missing + "` value", {}, res);
 
-        // Conversion en hash du password
-        //var hashedPwd = pwdHash.generate(parse.params.password);
-        //console.log(hashedPwd);
         var ladder = new Ladder({
             username: parse.params.username,
             wins: parse.params.wins,
@@ -189,18 +179,7 @@ var Controller = {
             });
         });
     }
- /*    deleteCustomer: function(req, res) {
-        Customer.findOne({ _id : req.params.id }, function(err, c) {
-            if (err)
-                return Controller.send(500, err.toString(), {}, res);
-            if (c == null)
-                return Controller.send(404, 'Not found', {}, res);
 
-            c.remove(function(err, row) {
-                return Controller.send(200, false, true, res);
-            });
-        });
-    }*/
 };
 
 

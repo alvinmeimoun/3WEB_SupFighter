@@ -29,17 +29,15 @@ angular.module('menu.controller', [
         }
     };
 })
-
+    // Controlleur gérant notre menu
     .controller('menuCtrl', function($scope,$cookieStore, $location, AuthenticationService,toastr, mySocket) {
-
-        /*$scope.message = "Waiting 2000ms for update";*/
         var credentials = AuthenticationService.GetCredentials();
         if (typeof credentials === 'undefined' )
         {
             $scope.nickname = "";
             $scope.disable = true;
         }
-        else /*if (credentials.currentUser)*/{
+        else {
             $scope.disable = false;
             $scope.nickname = credentials.currentUser.username;
 
@@ -53,7 +51,7 @@ angular.module('menu.controller', [
                     $scope.nickname = "";
                     $scope.disable = true;
                 }
-                else /*if (credentials.currentUser)*/{
+                else{
                     $scope.disable = false;
                     $scope.nickname = credentials.currentUser.username;
 

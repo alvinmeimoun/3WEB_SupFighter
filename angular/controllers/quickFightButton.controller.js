@@ -48,57 +48,54 @@ angular.module('quickFightButton.controller', [
                                console.log("item " + JSON.stringify(item.username));
                                var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
                                socket.emit('sendInvite',invite);
-                              /* var temp = [] ;
-                               socket.emit('clients');
-                               socket.on('clients', function(clients)
+                              /*var temp = [] ;
+                               socket.emit('users');
+                               socket.on('users', function(clients)
                                {
                                   temp = clients;
                                });
-                               temp.forEach(function(client){
+                               clients.forEach(function(client){
                                    if (client.username == item.username){
+                                       console.log("item " + JSON.stringify(item.username));
+                                       var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
+                                       socket.emit('sendInvite',invite);
 
                                        return ;
                                    }
+
+
                                });*/
-                               // var socket = io();
 
-
-                               return false;
+                               return ;
                            }
                            else
-                           if((item.losses >= user.losses && item.losses <= (user.losses +5)))
+                           if( item.losses <= (user.losses +5))
                            {
+                               console.log("item " + JSON.stringify(item.username));
                                var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
                                socket.emit('sendInvite',invite);
 
                                return ;
+                              /* var temp = [] ;
+                               socket.emit('clients');
+                               socket.on('clients', function(clients)
+                               {
+                                   temp = clients;
+                               });
+                               temp.forEach(function(client){
+                                   if (client.username == item.username){
+
+
+                                       return ;
+                                   }
+                               });*/
+
                            }
                            else
                            {
                                $scope.noUser = "No user found, please invite online user";
                                return false;
                            }
-
-                           /*switch (item.wins){
-                               case (user.wins):
-                                   var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
-                                   socket.emit('sendInvite',invite);
-                                   break;
-                               case (user.wins - 1):
-                                   var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
-                                   socket.emit('sendInvite',invite);
-                                   break;
-                               case (user.wins - 2):
-                                   var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
-                                   socket.emit('sendInvite',invite);
-                                   break;
-                               case (user.wins - 3):
-                                   var invite = { "fromUser" : AuthenticationService.GetCredentials().currentUser, "ToUser" : item, "response" : ""  };
-                                   socket.emit('sendInvite',invite);
-                                   break;
-                               default:
-                                   console.log("no user found");
-                                   break;*/
 
                                return ;
                            //}
