@@ -187,6 +187,7 @@ angular.module('chat.controller', [
         };
 
         $scope.cancel = function () {
+            socket.emit('RemoveInvitation', invite);
             $modalInstance.dismiss('cancel');
         };
     });

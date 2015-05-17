@@ -17,13 +17,12 @@ angular.module('register.controller', [
     console.log($http.defaults.headers);
     $scope.register = function(c){
 
-        //console.log(" login " + $scope.username + $scope.pwd);
+
         // on va vérifier tout d'abord si l'username n'est pas déjà utilisé
         var urlVerifUsername = serverUrl + '/getUser';
         $http.post(urlVerifUsername,c)
             .success(function(data, status, headers, config) {
-                // console.log("success " + data.result);
-                //console.log(status);
+
                 // Si c'est le cas on renvoie une erreur
                 $scope.error = " Username is already registered, please use an another";
             })
@@ -32,13 +31,12 @@ angular.module('register.controller', [
                 var urlCompleted = serverUrl + '/addUser';
                 $http.post(urlCompleted,c)
                     .success(function(data, status, headers, config) {
-                        //  console.log("success " + data.result);
-                        // console.log(status);
+
                         $scope.error = "";
-                        $scope.success = " Registration succedeed ! ";
+                        $scope.success = " Registration succedeed ! Please login to enter to the game ! ";
                     })
                     .error(function(data, status, headers, config) {
-                        // alert("An error occured: " + data.error);
+
                         $scope.error = "Error when submitting";
                     });
             });

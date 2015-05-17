@@ -24,13 +24,10 @@ angular.module('login.controller', [
         // Envoi de notre requête post à notre api pour vérifier l'exactitude de notre login mdp
         $http.post(urlCompleted,c)
             .success(function(data, status, headers, config) {
-                //console.log("success " + data.result);
-                $scope.success = data.result._id + data.result.username;
-                AuthenticationService.SetCredentials(data.result._id, data.result.username);
 
+                AuthenticationService.SetCredentials(data.result._id, data.result.username);
                 $location.path('/dashboard');
                 toastr.success('Welcome to Stick Fighters ! ');
-                //var socket = io();
                 socket.emit('login' , AuthenticationService.GetCredentials().currentUser);
                 socket.emit('users');
             })

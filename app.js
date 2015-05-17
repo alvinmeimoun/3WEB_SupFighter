@@ -12,9 +12,7 @@ var Controller = require('./Controller.js'),
     http = require('http').Server(app),
     io = require('socket.io')(http);
 
-/*
-var http = require('http').Server(app);
-var io = require('socket.io')(http);*/
+
 
 // Morgan MiddleWare
 var accessLogStream = fs.createWriteStream(__dirname + '/access.log', {flags: 'a'});
@@ -46,11 +44,11 @@ io.on('connection', function(socket)
 {
     console.log('Anonym connection');
 
-
+    // permet le stockage de la connexion d'un utilisateur
     socket.on('login', function(client)
     {
         console.log('a user connected');
-        console.log('list of connected users event : ');
+
         clients.forEach(function(entry) {
             if(entry.username == client.username)
             {
@@ -59,13 +57,14 @@ io.on('connection', function(socket)
 
 
             }
-
+            console.log("users : " + JSON.stringify(entry));
 
         });
         if (count == 0)
         {
             client.state = states[0];
             clients.push(client);
+            console.log("push " + JSON.stringify(client));
         }
         else
             count = 0;
@@ -122,11 +121,10 @@ io.on('connection', function(socket)
     {
         if(clients !== users)
         {
-            /*console.log('get users connected' );
-            console.log(clients);*/
             io.emit('users', clients);
         }
     });
+    // permet d'envoyer une invitation
     socket.on('sendInvite', function(invite)
     {
         //console.log('send invite ' + invite);
@@ -134,8 +132,6 @@ io.on('connection', function(socket)
 
         if (typeof(invite) !== 'undefined')
         {
-
-
             console.log("list : " + listOfInvitations.length);
             listOfInvitations.forEach(function(item)
             {
@@ -143,15 +139,13 @@ io.on('connection', function(socket)
                 {
                     count++;
                 }
-
                 console.log("list invitations item : " + JSON.stringify(item));
             });
             if(count == 0){
                 listOfInvitations.push(invite);
             }
-
             console.log('count ' + count);
-          //  io.emit('sendInvite',listOfInvitations);
+
         }
 
         io.emit('sendInvite', listOfInvitations);
@@ -159,9 +153,9 @@ io.on('connection', function(socket)
 
 
     });
+    // Socket permettant l'envoi de la réponse
     socket.on('sendResponse', function(invite)
     {
-        //console.log('send response ' + JSON.stringify(invite));
         if(listOfInvitations.length != 0)
         {
         listOfInvitations.forEach(function(item)
@@ -178,14 +172,10 @@ io.on('connection', function(socket)
 
         }
 
-        //io.emit('sendResponse', invite);
         io.emit('listenToResponse',invite);
-
-
-
-
     });
 
+    // Socket permettant de récupérer la liste des invitations
     socket.on('listenToResponse', function(invite)
     {
 
@@ -197,8 +187,7 @@ io.on('connection', function(socket)
                 if(item.fromUser.username == invite.fromUser.username && item.ToUser.username == invite.ToUser.username )
                 {
                     item.response = invite.response;
-                    //listOfInvitations.splice(item,1);
-                   // console.log(item.response);
+
                 }
 
             });
@@ -208,6 +197,7 @@ io.on('connection', function(socket)
         io.emit('listenToResponse', invite);
 
     });
+        // Socket permettant la mise à jour du statut d'un utilisateur
         socket.on('updateUserState', function (user){
 
             var users = clients;
@@ -238,7 +228,7 @@ io.on('connection', function(socket)
             io.emit('updateUserState',user);
 
         });
-
+    // Socket permettant de supprimer l'invitation dès qu'elle a été acceptée ou refusée
     socket.on('RemoveInvitation',function(invite){
         listOfInvitations.forEach(function(item)
         {
@@ -336,19 +326,16 @@ io.on('connection', function(socket)
 });
 });
 // Server Side
-//router.get('/server/', Controller.getUser);
+
 router.post('/server/getLadders', Controller.getAllLadder);
 router.post('/server/getUser', Controller.getUser);
 router.post('/server/addUser', Controller.addUser);
 router.post('/server/updateLadder', Controller.updateLadder);
-/*router.put('/server/update/:id', Controller.updateCustomer);
-router.delete('/server/delete/:id', Controller.deleteCustomer);*/
+
 
 // Client Side
 router.get('/', function(req, res) { res.sendFile(__dirname + '/index.html');});
-//router.get('/chat', function(req, res) { res.sendFile(__dirname + '/chatPart.html');});
 
-//app.use('/', express.static(__dirname ));
 app.use('/angular', express.static(__dirname + '/angular'));
 app.use('/angular/models', express.static(__dirname + '/angular/models'));
 app.use('/angular/controllers', express.static(__dirname + '/angular/controllers'));
@@ -359,9 +346,8 @@ app.use(router);
 //app.listen(8000);
 http.listen(8000 ,function()
 {
-    console.log("server on line ! ");
+    console.log("server online On localhost:8000 ");
 });
 
-console.log("Server is now online !");
 
 

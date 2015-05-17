@@ -12,7 +12,7 @@ angular.module('connectedUsers.controller', [
 
 ])
 
-
+// Controlleur permmettant d'afficher la liste des users connectés
 .controller('connectedCtrl', function($scope,$location,$http, AuthenticationService, mySocket)
     {
 

@@ -1,7 +1,7 @@
 Bienvenue sur SupFighter
 
 Pour utiliser l'application, suivre les étapes ci-dessous :
-- importer dans la base de données MongoDb le fichier supinfo_users.json
+- importer dans la base de données MongoDb le fichier supinfo_users.json puis supinfo_ladders.json
 
 - aller dans le répertoire racine du projet et ouvrir un invite de commande puis taper  :
     - npm install ( peut prendre quelques minutes )

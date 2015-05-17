@@ -14,7 +14,7 @@ angular.module('ladderBoard.controller', [
     ])
 // Controlleur de la liste des scores
     .controller("ladderBoardCtrl", function($scope, $http, $location , AuthenticationService ) {
-
+        socket.emit('login' , AuthenticationService.GetCredentials().currentUser);
         $http.defaults.headers.post["Content-Type"] = "application/json";
 
         console.log($http.defaults.headers);
